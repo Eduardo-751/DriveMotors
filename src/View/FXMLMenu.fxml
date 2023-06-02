@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.FXMLMenuController">
+    <stylesheets>
+        <URL value="@/CSS/styles.css" />
+    </stylesheets>
+    <children>
+      <AnchorPane fx:id="anchorPaneMenu" layoutX="530.0" layoutY="281.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0" />
+      <AnchorPane fx:id="anchorPaneSideNav" layoutY="122.0" prefHeight="598.0" prefWidth="325.0" style="-fx-background-color: #0A4969;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="125.0">
+         <children>
+            <ImageView fitHeight="332.0" fitWidth="327.0" layoutY="-8.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="-75.0">
+               <image>
+                  <Image url="@../Images/logo1.png" />
+               </image>
+            </ImageView>
+            <ScrollPane fitToHeight="true" hbarPolicy="NEVER" hmax="0.0" layoutX="10.0" layoutY="78.0" prefHeight="439.0" prefWidth="315.0" style="-fx-background-color: #0A4969;" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="150.0">
+               <content>
+                  <VBox fx:id="vbNavMenu" fillWidth="false" prefHeight="375.0" prefWidth="315.0" spacing="5.0" style="-fx-background-color: #0A4969;">
+                     <children>
+                        <Label id="navLabel" fx:id="btnSideAuto" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="350.0" text=" Veiculos" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/carSide.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
+                        </Label>
+                        <Label id="navLabel" fx:id="btnSideUser" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="350.0" text=" Usuarios" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/employeerSide.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
+                        </Label>
+                        <Label id="navLabel" fx:id="btnSideClient" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="350.0" text=" Clientes" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/clientSide.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
+                        </Label>
+                        <Label id="navLabel" fx:id="btnSideDocument" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="350.0" text=" Relatórios" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/documentSide.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
+                        </Label>
+                        <Label id="navLabel" fx:id="btnSideConfig" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="350.0" text=" Configurações" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/settingsSide.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <Label id="navLabel" fx:id="btnSideAutoCadastrar" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="325.0" text="                  Cadastrar" textFill="WHITE" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label id="navLabel" fx:id="btnSideAutoEditar" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="325.0" text="                  Editar" textFill="WHITE" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label id="navLabel" fx:id="btnSideUserCadastrar" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="325.0" text="                  Cadastrar" textFill="WHITE" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label id="navLabel" fx:id="btnSideUserEditar" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="75.0" prefWidth="325.0" text="                  Editar" textFill="WHITE" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label id="navLabel" fx:id="btnSideClientCadastrar" alignment="BASELINE_LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="325.0" text="                  Cadastrar" textFill="WHITE" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label id="navLabel" fx:id="btnSideClientEditar" alignment="BASELINE_LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="325.0" text="                  Editar" textFill="WHITE" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="125.0" prefWidth="736.0" style="-fx-background-color: #032d4d;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="btnExit" fitHeight="32.0" fitWidth="16.0" layoutX="743.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
+               <image>
+                  <Image url="@../images/exit.PNG" />
+               </image>
+            </ImageView>
+            <AnchorPane prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" maxHeight="90.0" minHeight="90.0" prefHeight="75.0" prefWidth="673.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label id="navMenu" fx:id="btnDashboard" alignment="CENTER" prefHeight="93.0" prefWidth="185.0" text=" Dashboard" textFill="#b7b7b7">
+                           <graphic>
+                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/document.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Label>
+                        <Label id="navMenu" fx:id="btnAuto" alignment="CENTER" prefHeight="93.0" prefWidth="185.0" text=" Veiculos" textFill="#b7b7b7">
+                           <graphic>
+                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/car.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Label>
+                        <Label id="navMenu" fx:id="btnUser" alignment="CENTER" prefHeight="93.0" prefWidth="185.0" text=" Usuarios" textFill="#b7b7b7">
+                           <graphic>
+                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/employeer.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Label>
+                        <Label id="navMenu" fx:id="btnClient" alignment="CENTER" prefHeight="93.0" prefWidth="185.0" text=" Clientes" textFill="#b7b7b7">
+                           <graphic>
+                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/client.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Label>
+                     </children></HBox>
+                  <Label id="navMenu" fx:id="btnMenu" layoutX="14.0" layoutY="9.0" prefHeight="32.0" prefWidth="325.0" text="    Menu" textFill="#b7b7b7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" translateX="10.0">
+                           <image>
+                              <Image url="@../images/burger.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+    </children>
+</AnchorPane>

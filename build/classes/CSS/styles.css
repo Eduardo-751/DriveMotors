@@ -1,0 +1,161 @@
+* {
+    -color :  #0a5378;
+    -white : #efefef;
+    -gray : #dfdfdf;
+    -darkGray : derive(-gray,-20%);
+    -black : #202020dd;
+    -abort : #e74c3c;
+}
+.root{
+    -fx-background-color : -white;
+    -fx-fill-width : true;
+    -fx-color : -color;
+    -fx-fill-height : true;
+    -fx-font-family: 'Segoe UI';
+    -fx-focus-color : transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/*
+ * **********
+ * Labels
+ * **********
+*/
+.label {
+    -fx-text-fill : -black;
+}
+#navLabel {
+    -fx-text-fill : -white;
+}
+
+/*
+ * **********
+ * TextField
+ * **********
+*/
+.text-field{
+    -fx-background-color : -white;
+    -fx-border-color : -darkGray;
+}
+.text-field:hover {
+    -fx-border-color : -black;
+    -fx-cursor: text;
+}
+.text-area:hover {
+    -fx-border-color : -black;
+    -fx-cursor: text;
+}
+
+/*
+ * **********
+ * Buttons
+ * ********** 
+ */
+.button {
+    -fx-background-color : #0080FF;
+    -fx-text-fill: -white;
+}
+.button:default {
+    -fx-background-color : -color;
+}
+.button:cancel {
+    -fx-background-color : -abort;
+}
+.button:hover {
+    -fx-background-color : #004C99;
+    -fx-inner-border : -darkGray;
+}
+.toggle-button {
+    -fx-background-color : -gray;
+}
+.toggle-button:selected {
+    -fx-background-color : -darkGray;
+}
+
+/*
+ * **********
+ * Checkbox
+ * **********
+ */
+.check-box>*.box {
+    -fx-background-color : -white;
+    -fx-border-color : -darkGray;
+}
+.check-box:selected>*.box>*.mark {
+    -fx-background-color : -black;
+}
+.check-box:indeterminate>*.box>*.mark {
+    -fx-background-color : -black;
+}
+.check-box>*.box:hover {
+    -fx-border-color : -black;
+    -fx-cursor: hand;
+}
+
+/*
+ * **********
+ * Table
+ * **********
+ */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: -color;
+}
+.table-view .column-header .label {
+   -fx-text-fill: white;
+   -fx-font-weight: bold; 
+   -fx-alignment: CENTER_LEFT;
+}
+.table-view .column-header {
+    -fx-background-color : #0d7fb8;
+}
+.table-view .virtual-flow .scroll-bar:horizontal .thumb {
+    -fx-background-color: transparent;
+}
+.table-row-cell{
+    -fx-table-cell-border-color: -gray;
+}
+
+/*
+ * **********
+ * ComboBox
+ * **********
+*/
+.combo-box {
+    -fx-background-color : -white;
+    -fx-border-color : -darkGray;
+}
+.combo-box:hover {
+    -fx-border-color : -black;
+    -fx-cursor: hand;
+}
+.combo-box .list-cell {
+     -fx-text-fill : -black;
+}
+
+/*
+ * **********
+ * ScrollPane
+ * **********
+ */
+.scroll-pane>*.scroll-bar {
+    -fx-background-color : -gray;
+}
+.scroll-pane>*.scroll-bar>*.thumb {
+    -fx-background-color : -color;
+}
+
+/*
+ * **********
+ * ID
+ * **********
+*/
+#navLabel:hover {
+    -fx-background-color : #063d59;
+}
+#navMenu:hover {
+    -fx-background-color : -gray;
+}
+#RegisterScrollPane {
+    -fx-border-color : -darkGray;
+}
