@@ -23,7 +23,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 // </editor-fold>
 import DAO.CarDAL;
 import Model.Car;
@@ -52,73 +51,62 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        ObservableList<String> observableCambioList = FXCollections.observableArrayList();
-        observableCambioList.addAll("Manual", "Automático");
-        cbTransmission.setItems(observableCambioList);
-        
-        ObservableList<String> observableCombustivelList = FXCollections.observableArrayList();
-        observableCombustivelList.addAll("Gasolina", "Etanol", "Diesel", "Gás natural veicular (GNV)", "Biodiesel", "Híbrido", "Elétrico", "Flex");
-        cbFuel.setItems(observableCombustivelList);
-        
-        cbos.setStatus(cbBrand, "brand", "brand_name");
-        cbos.setStatus(cbColor, "exteriorcolor", "color_name");
-
-        if(car == null)
-            cbModel.setDisable(true);
-        
-        SetEvent();
+        initializeComboBoxes();
+        setEventListeners();
         setTextMask();
         setAnchorPaneChildren();
-        
     }    
     
-    // <editor-fold defaultstate="collapsed" desc="Set Event to Components">  
-    private void SetEvent() {
+    private void initializeComboBoxes() {
+        cbTransmission.setItems(FXCollections.observableArrayList("Manual", "Automático"));
+        cbFuel.setItems(FXCollections.observableArrayList("Gasolina", "Etanol", "Diesel", "Gás natural veicular (GNV)",
+                "Biodiesel", "Híbrido", "Elétrico", "Flex"));
+        cbos.setStatus(cbBrand, "brand", "brand_name");
+        cbos.setStatus(cbColor, "exteriorcolor", "color_name");
+        cbModel.setDisable(true);
+        btnAddModel.setDisable(true);
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="Set Event Listeners to Components">  
+    private void setEventListeners() {
         btnCancel.setOnAction((ActionEvent event) -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Deseja realmente cancelar?", ButtonType.YES, ButtonType.NO);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES)
-                    LoadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
+                    loadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
             });
         });
         
         btnRegister.setOnAction((ActionEvent event) -> {
-            boolean[] bool = {cbAlarm.isSelected(), cbAbsBreak.isSelected(), cbAirCondic.isSelected(), cbElecWindws.isSelected(), cbPowerSteering.isSelected(), 
-                              cbAlloyWheels.isSelected(), cbcbRearView.isSelected(), cbDigitalRadio.isSelected(), dbKeylessStart.isSelected(), cbParkingAssis.isSelected()};
-            
+            boolean[] bool = { cbAlarm.isSelected(), cbAbsBreak.isSelected(), cbAirCondic.isSelected(),
+                    cbElecWindws.isSelected(), cbPowerSteering.isSelected(), cbAlloyWheels.isSelected(),
+                    cbcbRearView.isSelected(), cbDigitalRadio.isSelected(), dbKeylessStart.isSelected(),
+                    cbParkingAssis.isSelected() };
+
             newCar = new Car(carDAO.getModel("model_name", cbModel.getValue().toString().toUpperCase()), (String)cbColor.getValue(), (String)cbTransmission.getValue(),
                             "car_drivetrain", Integer.valueOf(txtYear.getText()), (String)cbFuel.getValue(), txtPlate.getText().toUpperCase(), txtRenavam.getText(),
                             Integer.valueOf(txtMileage.getText()), Double.valueOf(txtPrice.getText()), 2.0, txtNotes.getText().toUpperCase());
             
-            newCar.setAccessories(car.getAccessoriesId(), new boolean[] {cbAlarm.isSelected(), cbAbsBreak.isSelected(), cbAirCondic.isSelected(), cbElecWindws.isSelected(),  
-                                                                         cbPowerSteering.isSelected(),cbAlloyWheels.isSelected(), cbcbRearView.isSelected(), 
-                                                                         cbDigitalRadio.isSelected(), dbKeylessStart.isSelected(), cbParkingAssis.isSelected()});
-            
             if (MainApplication.isRegistering){
-                if(carDAO.InsertAccessories(bool) && carDAO.InsertCar(newCar)){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText("Veiculo Cadastrado com Sucesso!");
-                    alert.show();
-                    LoadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
+                if(carDAO.InsertAccessories(bool)){
+                    carDAO.InsertCar(newCar);
+                    showAlert(Alert.AlertType.INFORMATION, "Veiculo Cadastrado com Sucesso!");
+                    loadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Erro ao registrar o Veiculo");
-                    alert.show();
+                    showAlert(Alert.AlertType.ERROR, "Erro ao registrar o Veiculo");
                 } 
             } else if (MainApplication.isEditing) {
                 newCar.setId(car.getId());
+                newCar.setAccessories(car.getAccessoriesId(), bool);
                 if(carDAO.UpdateCarAccessories(newCar)){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText("Veiculo Editado com Sucesso!");
-                    alert.show();
-                    LoadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
+                    carDAO.UpdateCar(newCar);
+                    showAlert(Alert.AlertType.INFORMATION, "Veiculo Editado com Sucesso!");
+                    loadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Erro ao Editar o Veiculo");
-                    alert.show();
+                    showAlert(Alert.AlertType.ERROR, "Erro ao Editar o Veiculo");
                 } 
             }
+            loadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
         });
         
         btnAddBrand.setOnAction((ActionEvent event) -> {
@@ -148,7 +136,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
                 
                 FXMLModelInsertController controller = (FXMLModelInsertController) loader.getController();
                 controller.setBrand(cbBrand.getValue().toString());
-
+                
                 Stage stage = new Stage();
                 stage.setScene(new Scene(page));
                 stage.initStyle(StageStyle.UNDECORATED);
@@ -156,6 +144,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
                 
                 cbos.setStatusWhiteWhere(cbModel, "model", "brand_name", cbBrand.getValue().toString(), "model_name");
                 cbModel.setDisable(false);
+                btnAddModel.setDisable(false);
             } catch (IOException ex) {
                 Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
             } 
@@ -164,15 +153,13 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
         cbBrand.setOnAction(e -> {
             if(cbBrand.getValue() != null)
                 cbos.setStatusWhiteWhere(cbModel, "model", "brand_name", cbBrand.getValue().toString(), "model_name");
-            if(!cbModel.getItems().isEmpty())
-                cbModel.setDisable(false);
-            else
-                cbModel.setDisable(true);
+            cbModel.setDisable(false);
+            btnAddModel.setDisable(false);
         });
         
         cbModel.setOnAction(e -> {
             if(cbModel.getValue() != null)
-                setAccessories(carDAO.getModel("model_name", cbModel.getValue().toString().toUpperCase()));
+                setAccessories(carDAO.getModel("model_name", cbModel.getValue().toString().toUpperCase()).getAccessoriesId());
             else
                 resetAccessories();
         });
@@ -239,8 +226,8 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
     }// </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="CheckBox Setup">  
-    private void setAccessories(Model model){
-        boolean[] bool = carDAO.getAccessories("accessories_id", String.valueOf(model.getAccessoriesId()));
+    private void setAccessories(int id){
+        boolean[] bool = carDAO.getAccessories("accessories_id", String.valueOf(id));
         cbAlarm.setSelected(bool[0]);
         cbAbsBreak.setSelected(bool[1]);
         cbAirCondic.setSelected(bool[2]);
@@ -280,8 +267,9 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
         txtPrice.setText(car.getPrice().toString());
         txtNotes.setText(car.getNotes());
         cbos.setStatusWhiteWhere(cbModel, "model", "brand_name", car.getBrandName(), "model_name");
-        setAccessories(car.getModel());
+        setAccessories(car.getAccessoriesId());
         cbModel.setDisable(false);
+        btnAddModel.setDisable(false);
     }
     
     private void setAnchorPaneChildren(){
@@ -294,15 +282,20 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
         }
     }
         
-    private void LoadAnchorPane(String Url){
+    private void loadAnchorPane(String Url){
         MainApplication.isRegistering = false;
         MainApplication.isEditing = false;
         try {
-            AnchorPane a;
-            a = (AnchorPane) FXMLLoader.load(getClass().getResource(Url));
+            AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource(Url));
             anchorPaneMenu.getChildren().setAll(a);
         } catch (IOException ex) {
             Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
         } 
+    }
+
+    private void showAlert(Alert.AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.show();
     }
 }

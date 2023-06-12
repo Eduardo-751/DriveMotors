@@ -2,7 +2,7 @@
     -color :  #0a5378;
     -white : #efefef;
     -gray : #dfdfdf;
-    -darkGray : derive(-gray,-20%);
+    -darkGray: #bfbfbf;
     -black : #202020dd;
     -abort : #e74c3c;
 }

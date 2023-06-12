@@ -17,6 +17,11 @@ public class Car {
     private Integer year;
     private String fuel;
     private String plate;
+
+    @Override
+    public String toString() {
+        return "Car{" + "carId=" + carId + ", accessoriesId=" + accessoriesId + ", acessoriesValue=" + acessoriesValue + ", model=" + model + ", modelName=" + modelName + ", brandName=" + brandName + ", color=" + color + ", transmission=" + transmission + ", drivetrain=" + drivetrain + ", year=" + year + ", fuel=" + fuel + ", plate=" + plate + ", renavam=" + renavam + ", mileage=" + mileage + ", price=" + price + ", engine=" + engine + ", notes=" + notes + '}';
+    }
     private String renavam;
     private Integer mileage;
     private Double price;

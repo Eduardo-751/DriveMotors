@@ -42,21 +42,22 @@ public class FXMLBrandInsertController implements Initializable {
         
         btnInsert.setOnAction((ActionEvent event) -> {
             if(carDAO.InsertBrand(txtBrand.getText().toUpperCase())){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Marca Cadastrada com Sucesso!");
-                alert.show();
+                showAlert(Alert.AlertType.INFORMATION, "Marca Cadastrada com Sucesso!");
                 CloseScene();
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Erro ao registrar a Marca");
-                alert.show();
+                showAlert(Alert.AlertType.ERROR, "Erro ao registrar a Marca");
             } 
         });
     }// </editor-fold>
     
+    private void showAlert(Alert.AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.show();
+    }
+    
     private void CloseScene(){
-        Stage stage = new Stage();
-        stage = (Stage) txtBrand.getScene().getWindow();
+        Stage stage = (Stage) txtBrand.getScene().getWindow();
         stage.close();
     }
 }

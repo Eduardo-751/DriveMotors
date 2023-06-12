@@ -46,9 +46,8 @@ public class FXMLAnchorPaneUserInsertController implements Initializable {
         btnCancel.setOnAction((ActionEvent event) -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Deseja realmente cancelar?", ButtonType.YES, ButtonType.NO);
             alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.YES) {
+                if (response == ButtonType.YES)
                     LoadAnchorPane("../View/FXMLAnchorPaneUserTable.fxml");
-                }
             });
         });
         
@@ -56,27 +55,17 @@ public class FXMLAnchorPaneUserInsertController implements Initializable {
             newUser = new User(txtLogin.getText(), txtPassword.getText(), txtName.getText());
             if (MainApplication.isRegistering){
                 if(userDAO.InsertUsuario(newUser)){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText("Usuario Cadastrado com Sucesso!");
-                    alert.show();
+                    showAlert(Alert.AlertType.INFORMATION, "Usuario Cadastrado com Sucesso!");
                     LoadAnchorPane("../View/FXMLAnchorPaneUserTable.fxml");
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Erro ao registrar o Usuario");
-                    alert.show();
-                } 
+                } else
+                    showAlert(Alert.AlertType.ERROR, "Erro ao registrar o Usuario");
             } else if (MainApplication.isEditing) {
                 newUser.setId(this.user.getId());
                 if(userDAO.UpdateUsuario(newUser)){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText("Usuario Editado com Sucesso!");
-                    alert.show();
+                    showAlert(Alert.AlertType.INFORMATION, "Usuario Editado com Sucesso!");
                     LoadAnchorPane("../View/FXMLAnchorPaneUserTable.fxml");
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Erro ao Editar o Usuario");
-                    alert.show();
-                } 
+                } else
+                    showAlert(Alert.AlertType.ERROR,"Erro ao Editar o Usuario");
             }
         });
     }// </editor-fold>
@@ -108,5 +97,11 @@ public class FXMLAnchorPaneUserInsertController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
         } 
+    }
+    
+    private void showAlert(Alert.AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.show();
     }
 }

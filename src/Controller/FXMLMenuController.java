@@ -138,8 +138,7 @@ public class FXMLMenuController implements Initializable {
     
     private void LoadAnchorPane(String fxmlUrl){
         try {
-            AnchorPane a;
-            a = (AnchorPane) FXMLLoader.load(getClass().getResource(fxmlUrl));
+            AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource(fxmlUrl));
             anchorPaneMenu.getChildren().setAll(a);
         } catch (IOException ex) {
             Logger.getLogger(FXMLMenuController.class.getName()).log(Level.SEVERE, null, ex);

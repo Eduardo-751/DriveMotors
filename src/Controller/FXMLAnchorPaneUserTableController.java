@@ -26,58 +26,55 @@ import javafx.collections.transformation.SortedList;
 import DAO.UserDAL;
 import Model.User;
 import Main.MainApplication;
+
 /**
  * FXML Controller class
  *
  * @author eduardo
  */
 public class FXMLAnchorPaneUserTableController implements Initializable {
-    
+
     UserDAL userDAO = new UserDAL();
     @FXML private AnchorPane anchorPaneMenu;
-    
+
     @FXML private TableView<User> userTable;
     @FXML private TableColumn<User, String> userNome, userUsuario;
     @FXML private TableColumn<User, Integer> userPerfil;
     @FXML private TextField userFilter;
     @FXML private Button btnInsert, btnUpdate, btnDelete;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         CreateTable();
         SetEvent();
-    }    
-    
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Create Table User"> 
     private void CreateTable() {
         ObservableList<User> userList = FXCollections.observableArrayList(userDAO.getLista());
         userNome.setCellValueFactory(new PropertyValueFactory<>("name"));
         userUsuario.setCellValueFactory(new PropertyValueFactory<>("login"));
         userPerfil.setCellValueFactory(new PropertyValueFactory<>("profile"));
-        
-        FilteredList<User> filteredUser = new FilteredList<>(userList, b -> true);
+
+        FilteredList<User> filteredUsers = new FilteredList<>(userList);
         
         userFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredUser.setPredicate(usuario -> {
-                if(newValue == null || newValue.isEmpty())
+            filteredUsers.setPredicate(user -> {
+                if (newValue == null || newValue.isEmpty())
                     return true;
-
                 String lowerCaseFilter = newValue.toLowerCase();
-                if(usuario.getName().toLowerCase().contains(lowerCaseFilter))
-                    return true;
-                //else if (usuario.getProfile().toLowerCase().contains(lowerCaseFilter))
-                    //return true;
-                else 
-                    return usuario.getLogin().toLowerCase().contains(lowerCaseFilter);
+                return user.getName().toLowerCase().contains(lowerCaseFilter)
+                        || user.getLogin().toLowerCase().contains(lowerCaseFilter);
             });
         });
-        SortedList<User> sortedUser = new SortedList<>(filteredUser);
-        sortedUser.comparatorProperty().bind(userTable.comparatorProperty());
-        userTable.setItems(sortedUser);
+        
+        SortedList<User> sortedUsers = new SortedList<>(filteredUsers);
+        sortedUsers.comparatorProperty().bind(userTable.comparatorProperty());
+        userTable.setItems(sortedUsers);
     }// </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Set Event to Components">  
-     private void SetEvent() {
+    private void SetEvent() {
         btnInsert.setOnAction((ActionEvent event) -> {
             MainApplication.isRegistering = true;
             try {
@@ -86,12 +83,12 @@ public class FXMLAnchorPaneUserTableController implements Initializable {
                 anchorPaneMenu.getChildren().setAll(a);
             } catch (IOException ex) {
                 Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
-            } 
+            }
         });
-        
+
         btnUpdate.setOnAction((ActionEvent event) -> {
             User user = userTable.getSelectionModel().getSelectedItem();
-            if(user != null){
+            if (user != null) {
                 MainApplication.isEditing = true;
                 try {
                     FXMLLoader loader = new FXMLLoader();
@@ -104,16 +101,13 @@ public class FXMLAnchorPaneUserTableController implements Initializable {
                 } catch (IOException ex) {
                     Logger.getLogger(FXMLAnchorPaneCarTableController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Por favor escolha um usuário da tabela!");
-                alert.show();
-            }
+            } else
+                showAlert(Alert.AlertType.ERROR, "Por favor escolha um usuário da tabela!");
         });
-        
+
         btnDelete.setOnAction((ActionEvent event) -> {
             User user = userTable.getSelectionModel().getSelectedItem();
-            if(user != null){
+            if (user != null) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Você realmente deseja excluir o usuario " + user.getName() + "?", ButtonType.YES, ButtonType.NO);
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.YES) {
@@ -121,11 +115,14 @@ public class FXMLAnchorPaneUserTableController implements Initializable {
                         CreateTable();
                     }
                 });
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Pro favor escolha um usuário da tabela!");
-                alert.show();
-            }
+            } else
+                showAlert(Alert.AlertType.ERROR, "Pro favor escolha um usuário da tabela!");
         });
     }// </editor-fold>
+    
+    private void showAlert(Alert.AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.show();
+    }
 }

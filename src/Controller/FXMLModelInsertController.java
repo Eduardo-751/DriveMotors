@@ -50,21 +50,22 @@ public class FXMLModelInsertController implements Initializable {
             boolean[] bool = {cbAlarm.isSelected(), cbAbsBreak.isSelected(), cbAirCondic.isSelected(), cbElecWindws.isSelected(), cbPowerSteering.isSelected(), 
                               cbAlloyWheels.isSelected(), cbcbRearView.isSelected(), cbDigitalRadio.isSelected(), dbKeylessStart.isSelected(), cbParkingAssis.isSelected()};
             if(carDAO.InsertAccessories(bool) && carDAO.InsertModel(txtModel.getText().toUpperCase(), brand)){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Modelo Cadastrado com Sucesso!");
-                alert.show();
+                showAlert(Alert.AlertType.INFORMATION, "Modelo Cadastrado com Sucesso!");
                 CloseScene();
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Erro ao registrar o Modelo");
-                alert.show();
+                showAlert(Alert.AlertType.ERROR, "Erro ao registrar o Modelo");
             } 
         });
     }// </editor-fold>
     
+    private void showAlert(Alert.AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.show();
+    }
+    
     private void CloseScene(){
-        Stage stage = new Stage();
-        stage = (Stage) txtModel.getScene().getWindow();
+        Stage stage = (Stage) txtModel.getScene().getWindow();
         stage.close();
     }
     

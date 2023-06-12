@@ -3,6 +3,7 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -20,37 +21,42 @@
          </font></Label>
       <AnchorPane AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
          <children>
-            <GridPane hgap="5.0" maxHeight="135.0" nodeOrientation="LEFT_TO_RIGHT" vgap="5.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="360.0" AnchorPane.topAnchor="5.0">
+            <GridPane alignment="CENTER" hgap="15.0" layoutX="194.0" maxHeight="455.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="455.0" prefWidth="831.0" snapToPixel="false" vgap="5.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="5.0">
               <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="90.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="211.0" minWidth="10.0" prefWidth="200.0" />
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="336.0" minWidth="10.0" prefWidth="290.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="731.0" minWidth="0.0" prefWidth="695.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="50.0" minHeight="30.0" prefHeight="40.0" valignment="BASELINE" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="50.0" minHeight="30.0" prefHeight="40.0" valignment="BASELINE" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="50.0" minHeight="30.0" prefHeight="40.0" valignment="BASELINE" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="50.0" minHeight="30.0" prefHeight="40.0" valignment="BASELINE" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-
-               </children>
-            </GridPane>
-            <GridPane hgap="5.0" vgap="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="5.0">
-               <columnConstraints>
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="108.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="217.0" minWidth="10.0" prefWidth="217.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints maxHeight="30.0" minHeight="15.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="30.0" minHeight="15.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="30.0" minHeight="15.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="30.0" minHeight="15.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="25.0" valignment="BASELINE" vgrow="SOMETIMES" />
-               </rowConstraints>
-               <children>
-                   
+                  <Label text="Nome: " GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label text="CPF: " GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label text="RG: " GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label text="Email: " GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="lblName" prefHeight="45.0" GridPane.columnIndex="1" GridPane.valignment="CENTER" />
+                  <TextField fx:id="lblCpf" prefHeight="45.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <TextField fx:id="lblRg" prefHeight="45.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                  <TextField fx:id="lblEmail" prefHeight="45.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
          </children>

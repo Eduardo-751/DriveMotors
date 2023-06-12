@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 // </editor-fold>
 import Main.MainApplication;
@@ -32,11 +33,13 @@ public class FXMLAnchorPaneClientInsertController implements Initializable {
     @FXML private AnchorPane anchorPaneMenu;
     @FXML private Button btnRegister, btnCancel;
     @FXML private Label lblInsertUser;
+    @FXML private TextField lblCpf, lblEmail, lblName, lblRg;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         SetEvent();
         setAnchorPaneChildren();
+        setTextMask();
     }    
     
     // <editor-fold defaultstate="collapsed" desc="Set Event to Components">  
@@ -51,36 +54,71 @@ public class FXMLAnchorPaneClientInsertController implements Initializable {
         });
         
         btnRegister.setOnAction((ActionEvent event) -> {
-            //newUser = new Usuario();
+            newClient = new Client(lblCpf.getText(), lblName.getText(), lblRg.getText(), lblEmail.getText());
             if (MainApplication.isRegistering){
                 if(clientDAO.cadastraUsuario(newClient)){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText("Cliente Cadastrado com Sucesso!");
-                    alert.show();
+                    showAlert(Alert.AlertType.INFORMATION, "Cliente Cadastrado com Sucesso!");
                     LoadAnchorPane("../View/FXMLAnchorPaneClientTable.fxml");
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Erro ao registrar o Cliente");
-                    alert.show();
+                    showAlert(Alert.AlertType.ERROR, "Erro ao registrar o Cliente");
                 } 
             } else if (MainApplication.isEditing) {
                 newClient.setId(this.client.getId());
                 if(clientDAO.alteraClient(newClient)){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText("Cliente Editado com Sucesso!");
-                    alert.show();
+                    showAlert(Alert.AlertType.INFORMATION, "Cliente Editado com Sucesso!");
                     LoadAnchorPane("../View/FXMLAnchorPaneClientTable.fxml");
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Erro ao Editar o Cliente");
-                    alert.show();
+                    showAlert(Alert.AlertType.ERROR, "Erro ao Editar o Cliente");
                 } 
             }
         });
     }// </editor-fold>
     
+    // <editor-fold defaultstate="collapsed" desc="Text Mask">  
+    private void setTextMask(){
+        lblCpf.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.length() > 14)
+                lblCpf.setText(oldValue);
+            else{
+                if(newValue.length() == 3 && oldValue.length() < newValue.length())
+                    lblCpf.setText(newValue + ".");
+                else if(newValue.length() == 7 && oldValue.length() < newValue.length())
+                    lblCpf.setText(newValue + ".");
+                else if(newValue.length() == 11 && oldValue.length()<11){
+                    lblCpf.setText(newValue + "-");
+                }
+                else{
+                    lblCpf.setText(newValue);
+                }
+            }
+        });
+        lblCpf.setPromptText("111.111.111-11");
+        
+        lblRg.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.length() > 13)
+                lblRg.setText(oldValue);
+            else{
+                if(newValue.length() == 2 && oldValue.length() < newValue.length())
+                    lblRg.setText(newValue + ".");
+                else if(newValue.length() == 6 && oldValue.length() < newValue.length())
+                    lblRg.setText(newValue + ".");
+                else if(newValue.length() == 10 && oldValue.length() < newValue.length()){
+                    lblRg.setText(newValue + "-");
+                }
+                else{
+                    lblRg.setText(newValue);
+                }
+            }       
+        });
+        lblRg.setPromptText("11.111.111-11");
+    }// </editor-fold>
+    
     public void SetNew(Client client){
         this.client = client;
+        lblName.setText(client.getName());
+        lblCpf.setText(client.getCpf());
+        lblRg.setText(client.getRg());
+        lblEmail.setText(client.getEmail());
     }
     
     private void setAnchorPaneChildren(){
@@ -103,5 +141,11 @@ public class FXMLAnchorPaneClientInsertController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
         } 
+    }
+    
+    private void showAlert(Alert.AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.show();
     }
 }
