@@ -1,5 +1,8 @@
 package Controller;
 
+import Main.MainApplication;
+import DAO.UserDAL;
+import Model.User;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.io.IOException;
 import java.net.URL;
@@ -15,11 +18,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-// </editor-fold>
-import Main.MainApplication;
-import DAO.UserDAL;
-import Model.User;
 import javafx.scene.control.TextField;
+// </editor-fold>
+
 /**
  * FXML Controller class
  *
@@ -52,7 +53,7 @@ public class FXMLAnchorPaneUserInsertController implements Initializable {
         });
         
         btnRegister.setOnAction((ActionEvent event) -> {
-            newUser = new User(txtLogin.getText(), txtPassword.getText(), txtName.getText());
+            newUser = new User(txtLogin.getText(), txtPassword.getText(), txtName.getText(), true);
             if (MainApplication.isRegistering){
                 if(userDAO.InsertUsuario(newUser)){
                     showAlert(Alert.AlertType.INFORMATION, "Usuario Cadastrado com Sucesso!");
@@ -69,14 +70,8 @@ public class FXMLAnchorPaneUserInsertController implements Initializable {
             }
         });
     }// </editor-fold>
-    
-    public void SetNew(User user){
-        this.user = user;
-        txtLogin.setText(user.getLogin());
-        txtPassword.setText(user.getPassword());
-        txtName.setText(user.getName());
-    }
-    
+
+    // <editor-fold defaultstate="collapsed" desc="Manage AnchorPane"> 
     private void setAnchorPaneChildren(){
         if(MainApplication.isRegistering){
             btnRegister.setText("Cadastrar");
@@ -97,6 +92,13 @@ public class FXMLAnchorPaneUserInsertController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
         } 
+    }// </editor-fold>
+    
+    public void SetNew(User user){
+        this.user = user;
+        txtLogin.setText(user.getLogin());
+        txtPassword.setText(user.getPassword());
+        txtName.setText(user.getName());
     }
     
     private void showAlert(Alert.AlertType alertType, String message) {

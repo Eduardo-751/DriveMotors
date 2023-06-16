@@ -1,5 +1,13 @@
 package Controller;
 
+import DAO.CarDAL;
+import DAO.UserDAL;
+import DAO.ClientDAL;
+import DAO.MySQL;
+import Model.Car;
+import Model.User;
+import Model.Client;
+import Main.MainApplication;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.net.URL;
 import java.io.IOException;
@@ -21,14 +29,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.image.ImageView;
 import javafx.animation.TranslateTransition;
 // </editor-fold>
-import DAO.CarDAL;
-import DAO.UserDAL;
-import DAO.ClientDAL;
-import DAO.MySQL;
-import Model.Car;
-import Model.User;
-import Model.Client;
-import Main.MainApplication;
+
 /**
  * FXML Controller class
  *
@@ -45,7 +46,7 @@ public class FXMLMenuController implements Initializable {
     @FXML private ImageView btnExit;
     @FXML private Label btnMenu;
     @FXML private Label btnDashboard;
-    @FXML private Label btnAuto, btnSideAuto, btnSideAutoCadastrar, btnSideAutoEditar;
+    @FXML private Label btnAuto, btnSideAuto, btnSideAutoCadastrar, btnSideAutoEditar, btnSideAutoBrandAndModel;
     @FXML private Label btnUser, btnSideUser, btnSideUserCadastrar, btnSideUserEditar;
     @FXML private Label btnClient, btnSideClient, btnSideClientCadastrar, btnSideClientEditar;
     @FXML private Label btnSideDocument;
@@ -59,9 +60,9 @@ public class FXMLMenuController implements Initializable {
 
     // <editor-fold defaultstate="collapsed" desc="Set Event to Components"> 
     private void SetEvent() {
-        anchorPaneSideNav.setTranslateX(-325);
+        anchorPaneSideNav.setTranslateX(-335);
         btnMenu.setOnMouseClicked(event -> {
-            if(anchorPaneSideNav.getTranslateX() == -325)
+            if(anchorPaneSideNav.getTranslateX() == -335)
                 ShowSideBar();
         });
 
@@ -69,7 +70,7 @@ public class FXMLMenuController implements Initializable {
             CheckIfRegisteringToLoadAnchor("../View/FXMLAnchorPaneCarTable.fxml");
         });
         btnSideAuto.setOnMouseClicked(event -> {
-            AddSideButtons(btnSideAuto, btnSideAutoCadastrar, btnSideAutoEditar);
+            AddSideButtons(btnSideAuto, new Label[] {btnSideAutoCadastrar, btnSideAutoEditar, btnSideAutoBrandAndModel});
         });
         btnSideAutoCadastrar.setOnMouseClicked(event -> {
             HideSideBar(); 
@@ -81,12 +82,16 @@ public class FXMLMenuController implements Initializable {
             if(CheckIfRegisteringToLoadDialog("Digite a placa do Veiculo:", autoDAO, "plate_number", "../View/FXMLAnchorPaneCarInsert.fxml", "Placa não encontrada!"))
                 MainApplication.isEditing = true;
         });
+        btnSideAutoBrandAndModel.setOnMouseClicked(event -> {
+            HideSideBar(); 
+            CheckIfRegisteringToLoadAnchor("../View/FXMLAnchorPaneBrand.fxml");
+        });
         
         btnUser.setOnMouseClicked(event -> {
             CheckIfRegisteringToLoadAnchor("../View/FXMLAnchorPaneUserTable.fxml");
         });
         btnSideUser.setOnMouseClicked(event -> {
-            AddSideButtons(btnSideUser, btnSideUserCadastrar, btnSideUserEditar);
+            AddSideButtons(btnSideUser, new Label[] {btnSideUserCadastrar, btnSideUserEditar});
         });
         btnSideUserCadastrar.setOnMouseClicked(event -> {
             HideSideBar(); 
@@ -103,7 +108,7 @@ public class FXMLMenuController implements Initializable {
             CheckIfRegisteringToLoadAnchor("../View/FXMLAnchorPaneClientTable.fxml");
         });
         btnSideClient.setOnMouseClicked(event -> {
-            AddSideButtons(btnSideClient, btnSideClientCadastrar, btnSideClientEditar);
+            AddSideButtons(btnSideClient, new Label[] {btnSideClientCadastrar, btnSideClientEditar});
         });
         btnSideClientCadastrar.setOnMouseClicked(event -> {
             HideSideBar(); 
@@ -198,12 +203,15 @@ public class FXMLMenuController implements Initializable {
     }// </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Add and Remove Buttons on the Side Nav">  
-    private void AddSideButtons(Label parent, Label addCadastrar, Label addEditar){
+    private void AddSideButtons(Label parent, Label[] add){
         RemoveSideButtons();
-        addCadastrar.setVisible(true);
-        addEditar.setVisible(true);
-        vbNavMenu.getChildren().add(vbNavMenu.getChildren().indexOf(parent)+1, addCadastrar);
-        vbNavMenu.getChildren().add(vbNavMenu.getChildren().indexOf(parent)+2, addEditar);
+        int i = 1;
+        for(Label l : add){
+            l.setVisible(true);
+            vbNavMenu.getChildren().add(vbNavMenu.getChildren().indexOf(parent)+i, l);
+            i++;
+        }
+        
         vbNavMenu.setMinHeight(vbNavMenu.getChildren().size()*85);
     }
     
@@ -224,7 +232,7 @@ public class FXMLMenuController implements Initializable {
     public void HideSideBar() {
         RemoveSideButtons();
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.4), anchorPaneSideNav);
-        translateTransition.setToX(-325);
+        translateTransition.setToX(-335);
         translateTransition.play();
         anchorPaneSideNav.setTranslateX(0);
     }
@@ -234,7 +242,7 @@ public class FXMLMenuController implements Initializable {
         translateTransition.setToX(0);
         translateTransition.play();
 
-        anchorPaneSideNav.setTranslateX(-325);
+        anchorPaneSideNav.setTranslateX(-335);
     }// </editor-fold>
     
     public AnchorPane getAnchorPane(){

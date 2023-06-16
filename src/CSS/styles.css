@@ -101,19 +101,33 @@
     -fx-background-color: transparent;
     -fx-border-color: -color;
 }
+.table-row-cell:hover {
+    -fx-background-color: -gray;
+}
+.table-row-cell:selected {
+    -fx-background-color: #55a5cd;
+}
+.table-row-cell:disable {
+    -fx-text-background-color: -darkgray;
+}
 .table-view .column-header .label {
    -fx-text-fill: white;
    -fx-font-weight: bold; 
    -fx-alignment: CENTER_LEFT;
 }
 .table-view .column-header {
-    -fx-background-color : #0d7fb8;
+    -fx-background-color : #0b72a5;
 }
 .table-view .virtual-flow .scroll-bar:horizontal .thumb {
     -fx-background-color: transparent;
 }
 .table-row-cell{
-    -fx-table-cell-border-color: -gray;
+    -fx-table-cell-border-color: -darkGray;
+}
+.table-view .scroll-bar * {
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
 }
 
 /*

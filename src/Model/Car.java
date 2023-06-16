@@ -17,17 +17,12 @@ public class Car {
     private Integer year;
     private String fuel;
     private String plate;
-
-    @Override
-    public String toString() {
-        return "Car{" + "carId=" + carId + ", accessoriesId=" + accessoriesId + ", acessoriesValue=" + acessoriesValue + ", model=" + model + ", modelName=" + modelName + ", brandName=" + brandName + ", color=" + color + ", transmission=" + transmission + ", drivetrain=" + drivetrain + ", year=" + year + ", fuel=" + fuel + ", plate=" + plate + ", renavam=" + renavam + ", mileage=" + mileage + ", price=" + price + ", engine=" + engine + ", notes=" + notes + '}';
-    }
     private String renavam;
     private Integer mileage;
     private Double price;
     private Double engine;
     private String notes;
-
+    private boolean enable;
 
     // <editor-fold defaultstate="collapsed" desc="Constructor">   
     public Car() {
@@ -35,7 +30,7 @@ public class Car {
     }
     public Car(Model model, String color, String transmission, String drivetrain, 
             Integer year, String fuel, String plate, String renavam, Integer mileage, 
-            Double price, Double engine, String notes) {
+            Double price, Double engine, String notes, boolean enable) {
         this.model = model;
         this.modelName = model.getName();
         this.brandName = model.getBrand().getName();
@@ -50,10 +45,11 @@ public class Car {
         this.price = price;
         this.engine = engine;
         this.notes = notes;
+        this.enable = enable;
     }
     public Car(int accessoriesId, Model model, String color, String transmission, String drivetrain, 
             Integer year, String fuel, String plate, String renavam, Integer mileage, 
-            Double price, Double engine, String notes) {
+            Double price, Double engine, String notes, boolean enable) {
         this.accessoriesId = accessoriesId;
         this.model = model;
         this.modelName = model.getName();
@@ -69,10 +65,11 @@ public class Car {
         this.price = price;
         this.engine = engine;
         this.notes = notes;
+        this.enable = enable;
     }
     public Car(int carId, int accessoriesId, Model model, String color, String transmission, String drivetrain, 
             Integer year, String fuel, String plate, String renavam, Integer mileage, 
-            Double price, Double engine, String notes) {
+            Double price, Double engine, String notes, boolean enable) {
         this.carId = carId;
         this.accessoriesId = accessoriesId;
         this.model = model;
@@ -89,6 +86,7 @@ public class Car {
         this.price = price;
         this.engine = engine;
         this.notes = notes;
+        this.enable = enable;
     }// </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="Gets and Sets">    
@@ -191,5 +189,17 @@ public class Car {
     public void setAccessories(int id, boolean[] value){
         this.accessoriesId = id;
         this.acessoriesValue = value;
-    }// </editor-fold>     
+    }
+    public boolean isEnable() {
+        return enable;
+    }
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+    public String getStatus(){
+        if(enable)
+            return "Ativo";
+        else
+            return "Inativo";
+    }// </editor-fold>  
 }

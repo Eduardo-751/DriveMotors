@@ -23,7 +23,7 @@ public class CarDAL extends MySQL {
             CreateConn();
     }// </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="Insert">   
+    // <editor-fold defaultstate="collapsed" desc="Insert Car">   
     // Método para Cadastrar um automovel
     public boolean InsertCar(Car car) {
         String statementString = "INSERT INTO car (car_renavam, plate_number, car_year, car_mileage, car_engine, car_price,"
@@ -52,7 +52,7 @@ public class CarDAL extends MySQL {
         }
     }// </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="Select">   
+    // <editor-fold defaultstate="collapsed" desc="Select Car">   
     // Método para retornar um automovel pelo ID
     public Car getCar(int id) {
 
@@ -68,7 +68,7 @@ public class CarDAL extends MySQL {
                     car = new Car(rs.getInt("accessories_id"), getModel("model_id", rs.getString("model_id")), getColor("color_name", "color_id", 
                                   rs.getString("color_id")), rs.getString("car_transmission"), rs.getString("car_drivetrain"), rs.getInt("car_year"), 
                                   rs.getString("car_fuel"), rs.getString("plate_number"), rs.getString("car_renavam"), rs.getInt("car_mileage"),
-                                  rs.getDouble("car_price"), rs.getDouble("car_engine"), rs.getString("car_notes"));
+                                  rs.getDouble("car_price"), rs.getDouble("car_engine"), rs.getString("car_notes"), rs.getBoolean("enable"));
                     car.setId(rs.getInt("car_id"));
                 }
             }
@@ -96,7 +96,7 @@ public class CarDAL extends MySQL {
                     car = new Car(rs.getInt("accessories_id"), getModel("model_id", rs.getString("model_id")), getColor("color_name", "color_id", 
                                   rs.getString("color_id")), rs.getString("car_transmission"), rs.getString("car_drivetrain"), rs.getInt("car_year"), 
                                   rs.getString("car_fuel"), rs.getString("plate_number"), rs.getString("car_renavam"), rs.getInt("car_mileage"),
-                                  rs.getDouble("car_price"), rs.getDouble("car_engine"), rs.getString("car_notes"));
+                                  rs.getDouble("car_price"), rs.getDouble("car_engine"), rs.getString("car_notes"), rs.getBoolean("enable"));
                     car.setId(rs.getInt("car_id"));
                 }
             }
@@ -109,9 +109,9 @@ public class CarDAL extends MySQL {
     }
    
     // Método para retornar todos os automovel como um arraylist
-    public ArrayList<Car> getLista() {
+    public ArrayList<Car> getList() {
 
-        String statementString = "SELECT * FROM car ORDER BY car_id";
+        String statementString = "SELECT * FROM car ORDER BY enable DESC, car_id";
         ArrayList<Car> lista = new ArrayList<>();
 
         try {
@@ -130,7 +130,7 @@ public class CarDAL extends MySQL {
         }
     }// </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="Update">   
+    // <editor-fold defaultstate="collapsed" desc="Update Car">   
     // Método para alterar os dados de um automovel já cadastrado
     public boolean UpdateCar(Car car){
 
@@ -158,49 +158,27 @@ public class CarDAL extends MySQL {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-    }
+    }// </editor-fold>
 
-    public boolean UpdateCarAccessories(Car car) {
-        String statementString = "UPDATE accessories SET alarm = ?, abs_brake = ?, air_conditioning = ?, electric_windows = ?, "
-                                                      + "power_steering = ?, alloy_wheels = ?, rear_view = ?, digital_radio = ?, "
-                                                      + "keyless_start = ?, parking_assistance = ? WHERE accessories_id = ?";
+    // <editor-fold defaultstate="collapsed" desc="Delete Car">   
+    // Método para excluir um automovel
+    public boolean DeleteCar(Car car){
+        String statementString;
+        if(car.isEnable())
+            statementString = "UPDATE car SET enable = false WHERE car_id = ?";
+        else
+            statementString = "UPDATE car SET enable = true WHERE car_id = ?";
         
         try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
-                sql.setBoolean(1, car.getAccessoriesValue()[0]);
-                sql.setBoolean(2, car.getAccessoriesValue()[1]);
-                sql.setBoolean(3, car.getAccessoriesValue()[2]);
-                sql.setBoolean(4, car.getAccessoriesValue()[3]);
-                sql.setBoolean(5, car.getAccessoriesValue()[4]);
-                sql.setBoolean(6, car.getAccessoriesValue()[5]);
-                sql.setBoolean(7, car.getAccessoriesValue()[6]);
-                sql.setBoolean(8, car.getAccessoriesValue()[7]);
-                sql.setBoolean(9, car.getAccessoriesValue()[8]);
-                sql.setBoolean(10, car.getAccessoriesValue()[9]);
-                sql.setInt(11, car.getAccessoriesId());
+            sql.setInt(1, car.getId());
                 
-                sql.execute();
+            sql.execute();
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }// </editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="Delete">   
-    // Método para excluir um automovel
-    public boolean DeleteCar(Car auto) {
-        String statementString = "DELETE FROM car WHERE car_id = ?";
-        try {
-            try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
-                sql.setInt(1, auto.getId());
-                
-                sql.execute();
-            }
-            return true;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }// </editor-fold>
+    }
+    // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Insert Brand, Model and Accessories">   
     // Método para Inserir uma nova Marca de Carro
@@ -269,7 +247,7 @@ public class CarDAL extends MySQL {
                 sql.setString(1, search);
                 rs = sql.executeQuery();
                 if (rs.next()) {
-                    brand = new Brand(rs.getInt("brand_id"), rs.getString("brand_name"));
+                    brand = new Brand(rs.getInt("brand_id"), rs.getString("brand_name"), rs.getBoolean("enable"));
                 }
             }
             rs.close();
@@ -278,6 +256,28 @@ public class CarDAL extends MySQL {
         } 
         return brand;
     }
+    // Método para retornar todos as Marcas como um arraylist
+    public ArrayList<Brand> getBrandList() {
+
+        String statementString = "SELECT * FROM brand ORDER BY enable DESC, brand_id";
+        ArrayList<Brand> lista = new ArrayList<>();
+
+        try {
+            ResultSet rs;
+            try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
+                rs = sql.executeQuery();
+                while (rs.next()) {
+                    Brand brand = this.getBrand("brand_id", rs.getString("brand_id"));
+                    lista.add(brand);
+                }
+            }
+            rs.close();
+            return lista;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     //Método para retornar o Modelo do Carro
     public Model getModel(String field, String search){
         String statementString = "SELECT * From model Where " + field + " = ?";
@@ -288,7 +288,7 @@ public class CarDAL extends MySQL {
                 sql.setString(1, search);
                 rs = sql.executeQuery();
                 if (rs.next()) {
-                    model = new Model(rs.getInt("model_id"), rs.getInt("accessories_id"), rs.getString("model_name"), getBrand("brand_id", rs.getString("brand_id")));
+                    model = new Model(rs.getInt("model_id"), rs.getInt("accessories_id"), rs.getString("model_name"), getBrand("brand_id", rs.getString("brand_id")), rs.getBoolean("enable"));
                 }
             } 
             rs.close();
@@ -297,6 +297,29 @@ public class CarDAL extends MySQL {
         } 
         return model;
     }
+    // Método para retornar todos as Marcas como um arraylist
+    public ArrayList<Model> getModelList(String field, String search) {
+
+        String statementString = "SELECT * FROM model Where " + field + " = ? ORDER BY enable DESC, model_id";
+        ArrayList<Model> lista = new ArrayList<>();
+
+        try {
+            ResultSet rs;
+            try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
+                sql.setString(1, search);
+                rs = sql.executeQuery();
+                while (rs.next()) {
+                    Model model = this.getModel("model_id", rs.getString("model_id"));
+                    lista.add(model);
+                }
+            }
+            rs.close();
+            return lista;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     //Método para retornar os Acessorios do Carro
     public boolean[] getAccessories(String field, String search){
         String statementString = "SELECT * From accessories Where " + field + " = ?";
@@ -317,6 +340,83 @@ public class CarDAL extends MySQL {
             Logger.getLogger(CarDAL.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return accessories;
+    }// </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Update Model and Accessories">
+    public boolean UpdateModel(Model model){
+        String statementString = "UPDATE model SET model_name = ?, brand_id = ? WHERE model_id = ?";
+        
+            try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
+                sql.setString(1, model.getName());
+                sql.setInt(2, model.getBrand().getId());
+                sql.setInt(3, model.getId());
+                
+                sql.execute();
+                return true;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+    }
+    
+    public boolean UpdateAccessories(int id, boolean[] accessoriesValue) {
+        String statementString = "UPDATE accessories SET alarm = ?, abs_brake = ?, air_conditioning = ?, electric_windows = ?, "
+                                                      + "power_steering = ?, alloy_wheels = ?, rear_view = ?, digital_radio = ?, "
+                                                      + "keyless_start = ?, parking_assistance = ? WHERE accessories_id = ?";
+        
+        try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
+                sql.setBoolean(1, accessoriesValue[0]);
+                sql.setBoolean(2, accessoriesValue[1]);
+                sql.setBoolean(3, accessoriesValue[2]);
+                sql.setBoolean(4, accessoriesValue[3]);
+                sql.setBoolean(5, accessoriesValue[4]);
+                sql.setBoolean(6, accessoriesValue[5]);
+                sql.setBoolean(7, accessoriesValue[6]);
+                sql.setBoolean(8, accessoriesValue[7]);
+                sql.setBoolean(9, accessoriesValue[8]);
+                sql.setBoolean(10, accessoriesValue[9]);
+                sql.setInt(11, id);
+                
+                sql.execute();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }// </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Delete Brand and Model">   
+    // Método para excluir um automovel
+    public boolean DeleteBrand(Brand brand) {
+        String statementString = "UPDATE brand SET enable = false WHERE brand_id = ?";
+        try {
+            try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
+                sql.setInt(1, brand.getId());
+                
+                sql.execute();
+            }
+            return true;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean DeleteModel(Model model) {
+        String statementString;
+        if(model.isEnable())
+            statementString = "UPDATE model SET enable = false WHERE model_id = ?";
+        else
+            statementString = "UPDATE model SET enable = true WHERE model_id = ?";
+        try {
+            try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
+                sql.setInt(1, model.getId());
+                
+                sql.execute();
+            }
+            return true;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }// </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Select Color">   

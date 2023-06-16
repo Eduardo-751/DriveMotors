@@ -1,5 +1,8 @@
 package Controller;
 
+import DAO.CarDAL;
+import Model.Car;
+import Main.MainApplication;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.net.URL;
 import java.io.IOException;
@@ -32,6 +35,7 @@ import javafx.collections.transformation.SortedList;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.PageSize;
@@ -40,11 +44,12 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPCell;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.css.PseudoClass;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableRow;
 // </editor-fold>
-import DAO.CarDAL;
-import Model.Car;
-import Main.MainApplication;
-import com.itextpdf.text.Image;
 
 /**
  * FXML Controller class
@@ -57,11 +62,12 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
     @FXML private AnchorPane anchorPaneMenu;
 
     @FXML private TableView<Car> carTable;
-    @FXML private TableColumn<Car, String> carBrand, carModel, carPlate;
+    @FXML private TableColumn<Car, String> carBrand, carModel, carPlate, carStatus;
     @FXML private TableColumn<Car, Integer> carYear, carMiliage;
     @FXML private TableColumn<Car, Double> carPrice;
     @FXML private TextField carFilter;
     @FXML private Button btnInsert, btnUpdate, btnDelete, btnGerarPDF;
+    @FXML private CheckBox cbStatus;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -71,14 +77,19 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
 
     // <editor-fold defaultstate="collapsed" desc="Create Table Car">  
     private void CreateTable() {
-        ObservableList<Car> carList = FXCollections.observableArrayList(carDAO.getLista());
+        ObservableList<Car> completeList = FXCollections.observableArrayList(carDAO.getList());
+        ObservableList<Car> carList = FXCollections.observableArrayList();
+        for(Car c : completeList){
+            if(c.isEnable() || cbStatus.isSelected())
+                carList.add(c);
+        }
         carBrand.setCellValueFactory(new PropertyValueFactory<>("brandName"));
         carModel.setCellValueFactory(new PropertyValueFactory<>("modelName"));
         carYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         carMiliage.setCellValueFactory(new PropertyValueFactory<>("mileage"));
         carPlate.setCellValueFactory(new PropertyValueFactory<>("plate"));
         carPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-        carTable.setItems(carList);
+        carStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         FilteredList<Car> filteredCars = new FilteredList<>(carList);
 
@@ -100,7 +111,7 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
         sortedCars.comparatorProperty().bind(carTable.comparatorProperty());
         carTable.setItems(sortedCars);
     }// </editor-fold>
-
+    
     // <editor-fold defaultstate="collapsed" desc="Set Event to Components">  
     private void setEventListeners() {
         btnInsert.setOnAction((ActionEvent event) -> {
@@ -130,27 +141,65 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
                     Logger.getLogger(FXMLAnchorPaneCarTableController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                showAlert(Alert.AlertType.ERROR, "Por favor escolha um cliente da tabela!");
+                showAlert(Alert.AlertType.ERROR, "Por favor escolha um Automóvel da tabela!");
             }
         });
 
         btnDelete.setOnAction((ActionEvent event) -> {
             Car car = carTable.getSelectionModel().getSelectedItem();
             if (car != null) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Você realmente deseja excluir o automóvel selecionado?", ButtonType.YES, ButtonType.NO);
-                alert.showAndWait().ifPresent(response -> {
+                String str;
+                if(car.isEnable())
+                    str = "Você realmente deseja Desativar o automóvel selecionado?";
+                else
+                    str = "Você realmente deseja Ativar o automóvel selecionado?";
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, str, ButtonType.YES, ButtonType.NO);
+                    alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.YES) {
                         carDAO.DeleteCar(car);
                         CreateTable();
                     }
                 });
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Pro favor escolha um cliente da tabela!");
             }
+            else
+                showAlert(Alert.AlertType.ERROR, "Por favor escolha um Automóvel da tabela!");
+
+        });
+        
+        carTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+                if(carTable.getSelectionModel().getSelectedItem() != null)
+                {
+                    Car car = carTable.getSelectionModel().getSelectedItem();
+                    if(!car.isEnable())
+                        btnDelete.setText("Ativar");
+                    else
+                        btnDelete.setText("Desativar");
+                }
+             }
+        });
+        
+        carTable.setRowFactory(tableView -> {
+            TableRow<Car> row = new TableRow<>();
+            PseudoClass higlighted = PseudoClass.getPseudoClass("disable");
+            row.itemProperty().addListener((obs, oldOrder, newOrder) -> {
+                if (newOrder != null && newOrder.getStatus() != null) {
+                    row.pseudoClassStateChanged(higlighted, newOrder.getStatus().equals("Inativo"));
+                } else {
+                    row.pseudoClassStateChanged(higlighted, false);
+                }
+            });
+            return row;
         });
         
         btnGerarPDF.setOnAction ((ActionEvent event) -> {
             generateDocument();
+        });
+        
+        cbStatus.setOnAction ((ActionEvent event) -> {
+            carFilter.setText(null);
+            CreateTable();
         });
     }// </editor-fold>
 

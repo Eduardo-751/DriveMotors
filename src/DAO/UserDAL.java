@@ -23,11 +23,11 @@ public class UserDAL extends MySQL{
     // Método para cadastrar um usuario
     public boolean InsertUsuario(User user) {
         String statementString = "INSERT INTO user (user_login, user_password, user_name) VALUES (?, ?, ?)";
-
+        
         try {
             try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
                 sql.setString(1, user.getLogin());
-                sql.setString(2, user.getPassword());
+                sql.setString(2, user.setCriptografia(user.getPassword()));
                 sql.setString(3, user.getName());
                 
                 sql.execute();
@@ -51,7 +51,7 @@ public class UserDAL extends MySQL{
                 sql.setInt(1, id);
                 rs = sql.executeQuery();
                 if (rs.next()) {
-                    user = new User(rs.getString("user_login"), rs.getString("user_password"), rs.getString("user_name"));
+                    user = new User(rs.getString("user_login"), rs.getString("user_password"), rs.getString("user_name"), rs.getBoolean("enable"));
                     user.setId(rs.getInt("user_id"));
                 }
             }
@@ -76,7 +76,7 @@ public class UserDAL extends MySQL{
                 sql.setString(1, search);
                 rs = sql.executeQuery();
                 if (rs.next()) {
-                    user = new User(rs.getString("user_login"), rs.getString("user_password"), rs.getString("user_name"));
+                    user = new User(rs.getString("user_login"), rs.getString("user_password"), rs.getString("user_name"), rs.getBoolean("enable"));
                     user.setId(rs.getInt("user_id"));
                 }
             }
@@ -89,7 +89,7 @@ public class UserDAL extends MySQL{
     }
 
     // Método para retornar todos os usuario como um arraylist
-    public ArrayList<User> getLista() {
+    public ArrayList<User> getList() {
 
         String statementString = "SELECT * FROM user ORDER BY user_id";
         ArrayList<User> lista = new ArrayList<>();
@@ -134,7 +134,11 @@ public class UserDAL extends MySQL{
     // <editor-fold defaultstate="collapsed" desc="Delete">   
     // Método para excluir um usuario
     public boolean excluiUsuario(User user) {
-        String statementString = "DELETE FROM user WHERE user_id = ?";
+        String statementString;
+        if(user.isEnable())
+            statementString = "UPDATE user SET enable = false WHERE user_id = ?";
+        else
+            statementString = "UPDATE user SET enable = true WHERE user_id = ?";
         try {
             try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
                 sql.setInt(1, user.getId());

@@ -1,11 +1,17 @@
 package Controller;
 
+import Model.Client;
+import DAO.ClientDAL;
+import Main.MainApplication;
+import Model.Car;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.net.URL;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,10 +28,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.css.PseudoClass;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableRow;
 // </editor-fold>
-import Model.Client;
-import DAO.ClientDAL;
-import Main.MainApplication;
 
 /**
  * FXML Controller class
@@ -41,6 +47,7 @@ public class FXMLAnchorPaneClientTableController implements Initializable {
     @FXML private TableColumn<Client, String> clientNome, clientCPF, clientRG, clientEmail;
     @FXML private TextField clientFilter;
     @FXML private Button btnInsert, btnUpdate, btnDelete;
+    @FXML private CheckBox cbStatus;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -50,12 +57,16 @@ public class FXMLAnchorPaneClientTableController implements Initializable {
 
     // <editor-fold defaultstate="collapsed" desc="Create Table Client">  
     private void CreateTable() {
-        ObservableList<Client> clientList = FXCollections.observableArrayList(clientDAO.getLista());
+        ObservableList<Client> completeList = FXCollections.observableArrayList(clientDAO.getList());
+        ObservableList<Client> clientList = FXCollections.observableArrayList();
+        for(Client c : completeList){
+            if(c.isEnable() || cbStatus.isSelected())
+                clientList.add(c);
+        }
         clientNome.setCellValueFactory(new PropertyValueFactory<>("name"));
         clientCPF.setCellValueFactory(new PropertyValueFactory<>("cpf"));
         clientRG.setCellValueFactory(new PropertyValueFactory<>("rg"));
         clientEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        clientTable.setItems(clientList);
 
         FilteredList<Client> filteredClients = new FilteredList<>(clientList, b -> true);
 
@@ -104,29 +115,65 @@ public class FXMLAnchorPaneClientTableController implements Initializable {
                 } catch (IOException ex) {
                     Logger.getLogger(FXMLAnchorPaneCarTableController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Por favor escolha um cliente da tabela!");
-                alert.show();
-            }
+            } else
+                showAlert(Alert.AlertType.ERROR, "Por favor escolha um cliente da tabela!");
         });
 
         btnDelete.setOnAction((ActionEvent event) -> {
-            Client auto = clientTable.getSelectionModel().getSelectedItem();
-            if (auto != null) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Você realmente deseja excluir o cliente selecionado?", ButtonType.YES, ButtonType.NO);
+            Client client = clientTable.getSelectionModel().getSelectedItem();
+            if (client != null) {
+                String str;
+                if(client.isEnable())
+                    str = "Você realmente deseja Desativar o Cliente selecionado?";
+                else
+                    str = "Você realmente deseja Ativar o Cliente selecionado?";
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, str, ButtonType.YES, ButtonType.NO);
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.YES) {
-                        clientDAO.excluiClient(auto);
+                        clientDAO.excluiClient(client);
                         CreateTable();
                     }
                 });
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Pro favor escolha um cliente da tabela!");
-                alert.show();
-            }
+            } else
+                showAlert(Alert.AlertType.ERROR, "Por favor escolha um Cliente da tabela!");
+        });
+        
+        clientTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+                if(clientTable.getSelectionModel().getSelectedItem() != null)
+                {
+                    Client client = clientTable.getSelectionModel().getSelectedItem();
+                    if(!client.isEnable())
+                        btnDelete.setText("Ativar");
+                    else
+                        btnDelete.setText("Desativar");
+                }
+             }
+        });
+        
+        clientTable.setRowFactory(tableView -> {
+            TableRow<Client> row = new TableRow<>();
+            PseudoClass higlighted = PseudoClass.getPseudoClass("disable");
+            row.itemProperty().addListener((obs, oldOrder, newOrder) -> {
+                if (newOrder != null && newOrder.getStatus() != null) {
+                    row.pseudoClassStateChanged(higlighted, newOrder.getStatus().equals("Inativo"));
+                } else {
+                    row.pseudoClassStateChanged(higlighted, false);
+                }
+            });
+            return row;
+        });
+        
+        cbStatus.setOnAction ((ActionEvent event) -> {
+            clientFilter.setText(null);
+            CreateTable();
         });
     }// </editor-fold>
-
+    
+    private void showAlert(Alert.AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.show();
+    }
 }

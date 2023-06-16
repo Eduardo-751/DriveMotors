@@ -1,5 +1,9 @@
 package Controller;
 
+import DAO.CarDAL;
+import Model.Car;
+import Main.MainApplication;
+import Main.ComboBoxDataInsert;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.io.IOException;
 import java.net.URL;
@@ -24,11 +28,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.collections.FXCollections;
 // </editor-fold>
-import DAO.CarDAL;
-import Model.Car;
-import Main.MainApplication;
-import Main.ComboBoxDataInsert;
-import Model.Model;
 /**
  * FXML Controller class
  *
@@ -57,6 +56,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
         setAnchorPaneChildren();
     }    
     
+    // <editor-fold defaultstate="collapsed" desc="Populate ComboBox">  
     private void initializeComboBoxes() {
         cbTransmission.setItems(FXCollections.observableArrayList("Manual", "Automático"));
         cbFuel.setItems(FXCollections.observableArrayList("Gasolina", "Etanol", "Diesel", "Gás natural veicular (GNV)",
@@ -65,7 +65,8 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
         cbos.setStatus(cbColor, "exteriorcolor", "color_name");
         cbModel.setDisable(true);
         btnAddModel.setDisable(true);
-    }
+        
+    }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Set Event Listeners to Components">  
     private void setEventListeners() {
@@ -85,7 +86,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
 
             newCar = new Car(carDAO.getModel("model_name", cbModel.getValue().toString().toUpperCase()), (String)cbColor.getValue(), (String)cbTransmission.getValue(),
                             "car_drivetrain", Integer.valueOf(txtYear.getText()), (String)cbFuel.getValue(), txtPlate.getText().toUpperCase(), txtRenavam.getText(),
-                            Integer.valueOf(txtMileage.getText()), Double.valueOf(txtPrice.getText()), 2.0, txtNotes.getText().toUpperCase());
+                            Integer.valueOf(txtMileage.getText()), Double.valueOf(txtPrice.getText()), 2.0, txtNotes.getText().toUpperCase(), true);
             
             if (MainApplication.isRegistering){
                 if(carDAO.InsertAccessories(bool)){
@@ -98,7 +99,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
             } else if (MainApplication.isEditing) {
                 newCar.setId(car.getId());
                 newCar.setAccessories(car.getAccessoriesId(), bool);
-                if(carDAO.UpdateCarAccessories(newCar)){
+                if(carDAO.UpdateAccessories(newCar.getAccessoriesId(), newCar.getAccessoriesValue())){
                     carDAO.UpdateCar(newCar);
                     showAlert(Alert.AlertType.INFORMATION, "Veiculo Editado com Sucesso!");
                     loadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
@@ -120,8 +121,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
                 stage.setScene(new Scene(page));
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.showAndWait();
-                if(cbBrand.getValue() != null)
-                    cbos.setStatus(cbBrand, "brand", "brand_name");
+                cbos.setStatus(cbBrand, "brand", "brand_name");
             } catch (IOException ex) {
                 Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
             } 
@@ -164,7 +164,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
                 resetAccessories();
         });
     }// </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Text Mask">  
     private void setTextMask(){
         txtPlate.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -252,6 +252,29 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
         cbParkingAssis.setSelected(false);       
     }// </editor-fold>
     
+    // <editor-fold defaultstate="collapsed" desc="Manage AnchorPane">  
+    private void setAnchorPaneChildren(){
+        if(MainApplication.isRegistering){
+            btnRegister.setText("Cadastrar");
+            lblInsertCar.setText("Cadastro de Veiculos");
+        } else if (MainApplication.isEditing){
+            btnRegister.setText("Salvar");
+            lblInsertCar.setText("Edição de Veiculos");
+        }
+    }
+        
+    private void loadAnchorPane(String Url){
+        MainApplication.isRegistering = false;
+        MainApplication.isEditing = false;
+        try {
+            AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource(Url));
+            anchorPaneMenu.getChildren().setAll(a);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }// </editor-fold>
+
+    
     public void SetNew(Car car){
         this.car = car;
         boolean[] bool = car.getAccessoriesValue();
@@ -272,27 +295,6 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
         btnAddModel.setDisable(false);
     }
     
-    private void setAnchorPaneChildren(){
-        if(MainApplication.isRegistering){
-            btnRegister.setText("Cadastrar");
-            lblInsertCar.setText("Cadastro de Veiculos");
-        } else if (MainApplication.isEditing){
-            btnRegister.setText("Salvar");
-            lblInsertCar.setText("Edição de Veiculos");
-        }
-    }
-        
-    private void loadAnchorPane(String Url){
-        MainApplication.isRegistering = false;
-        MainApplication.isEditing = false;
-        try {
-            AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource(Url));
-            anchorPaneMenu.getChildren().setAll(a);
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-
     private void showAlert(Alert.AlertType alertType, String message) {
         Alert alert = new Alert(alertType);
         alert.setContentText(message);

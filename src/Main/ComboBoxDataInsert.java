@@ -21,7 +21,7 @@ public class ComboBoxDataInsert {
     }
     
     public void setStatus(ComboBox cb, String table, String collum) {
-        String statementString = "SELECT DISTINCT " + collum + " FROM " + table + " ORDER BY " + collum;
+        String statementString = "SELECT DISTINCT " + collum + " FROM " + table + " WHERE enable = true ORDER BY " + collum;
         ObservableList<String> observableList = FXCollections.observableArrayList();
         try {
             ResultSet rs;
@@ -38,7 +38,7 @@ public class ComboBoxDataInsert {
         }
     }
     public void setStatusWhiteWhere(ComboBox cb, String table, String field, String search , String collum) {
-        String statementString = "SELECT DISTINCT " + collum + " FROM " + table + " Inner Join brand On model.brand_id = brand.brand_id  Where " + field + " = ?";
+        String statementString = "SELECT DISTINCT " + collum + " FROM " + table + " Inner Join brand On model.brand_id = brand.brand_id  Where " + field + " = ? And model.enable= true";
         ObservableList<String> observableList = FXCollections.observableArrayList();
         try {
             ResultSet rs;

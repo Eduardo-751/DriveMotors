@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="DriveMotors">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/DriveMotors.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

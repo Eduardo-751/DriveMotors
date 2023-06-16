@@ -2,6 +2,8 @@ package Model;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,21 +16,24 @@ public class User {
     private String password = null;
     private String name = null;
     private String profile = null;
+    private boolean enable;
 
     // <editor-fold defaultstate="collapsed" desc="Constructor">   
     public User() {
         
     }
-    public User(String login, String password, String name) {
+    public User(String login, String password, String name, boolean enable) {
         this.login = login;
         this.password = password;
         this.name = name;
+        this.enable = enable;
     }
-    public User(int usuarioId, String login, String password, String name) {
+    public User(int usuarioId, String login, String password, String name, boolean enable) {
         this.usuarioId = usuarioId;
         this.login = login;
         this.password = password;
         this.name = name;
+        this.enable = enable;
     }// </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Gets and Sets">    
@@ -61,6 +66,18 @@ public class User {
     }
     public void setProfile(String newValue) {
         this.profile = newValue;
+    }
+    public boolean isEnable() {
+        return enable;
+    }
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+    public String getStatus(){
+        if(enable)
+            return "Ativo";
+        else
+            return "Inativo";
     }// </editor-fold>   
     
     public static char[] hexCodes(byte[] text) {
@@ -75,9 +92,15 @@ public class User {
         return hexOutput;
     }
 
-    public String setCriptografia(String new_pass) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        String pass = new String(hexCodes(md.digest(new_pass.getBytes())));
+    public String setCriptografia(String new_pass) {
+        MessageDigest md;
+        String pass = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+            pass = new String(hexCodes(md.digest(new_pass.getBytes())));
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         return pass;
     }

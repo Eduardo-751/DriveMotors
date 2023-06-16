@@ -1,8 +1,13 @@
 package Controller;
 
+import Model.User;
+import DAO.UserDAL;
+import java.net.URL;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.util.ResourceBundle;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,10 +23,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.Node;
 // </editor-fold>
-import Model.User;
-import DAO.UserDAL;
-import java.net.URL;
-import javafx.beans.value.ObservableValue;
 /*
  * FXML Controller class
  *
@@ -41,11 +42,16 @@ public class FXMLLoginController implements Initializable {
         CheckBoxSelected();
     }
     
-    @FXML private void TentarLogin(){
+    @FXML private void TentarLogin() {
         User user = (User) userDAL.getWithWhere("user_login", txtLogin.getText());
         if (user != null) {
             usuario = user;
-            if ((txtPasswordField.isVisible() && usuario.getPassword().equals(txtPasswordField.getText())) || usuario.getPassword().equals(txtPassword.getText())) {
+            String cryptPass;
+            if(txtPasswordField.isVisible())
+                cryptPass = usuario.setCriptografia(txtPasswordField.getText());
+            else
+                cryptPass = usuario.setCriptografia(txtPassword.getText());
+            if (usuario.getPassword().equals(cryptPass)) {
                 txtLogin.setText("");
                 txtPasswordField.setText("");
                 txtPassword.setText("");

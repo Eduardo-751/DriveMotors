@@ -53,7 +53,7 @@ public class ClientDAL extends MySQL {
                 sql.setInt(1, id);
                 rs = sql.executeQuery();
                 if (rs.next()) {
-                    client = new Client(rs.getString("client_cpf"), rs.getString("client_name"), rs.getString("client_rg"), rs.getString("client_mail"));
+                    client = new Client(rs.getString("client_cpf"), rs.getString("client_name"), rs.getString("client_rg"), rs.getString("client_mail"), rs.getBoolean("enable"));
                     client.setId(rs.getInt("client_id"));
                 }
             }
@@ -78,7 +78,7 @@ public class ClientDAL extends MySQL {
                 sql.setString(1, search);
                 rs = sql.executeQuery();
                 if (rs.next()) {
-                    client = new Client(rs.getString("client_cpf"), rs.getString("client_name"), rs.getString("client_rg"), rs.getString("client_mail"));
+                    client = new Client(rs.getString("client_cpf"), rs.getString("client_name"), rs.getString("client_rg"), rs.getString("client_mail"), rs.getBoolean("enable"));
                     client.setId(rs.getInt("client_id"));
                 }
             }
@@ -91,7 +91,7 @@ public class ClientDAL extends MySQL {
     }
 
     // Método para retornar todos os Clientes como um arraylist
-    public ArrayList<Client> getLista() {
+    public ArrayList<Client> getList() {
 
         String statementString = "SELECT * FROM client ORDER BY client_id";
         ArrayList<Client> lista = new ArrayList<>();
@@ -137,7 +137,11 @@ public class ClientDAL extends MySQL {
     // <editor-fold defaultstate="collapsed" desc="Delete">   
     // Método para excluir um Client
     public boolean excluiClient(Client client) {
-        String statementString = "DELETE FROM client WHERE client_id = ?";
+        String statementString;
+        if(client.isEnable())
+            statementString = "UPDATE client SET enable = false WHERE client_id = ?";
+        else
+            statementString = "UPDATE client SET enable = true WHERE client_id = ?";
         try {
             try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
                 sql.setInt(1, client.getId());

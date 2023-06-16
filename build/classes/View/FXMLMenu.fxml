@@ -17,7 +17,7 @@
     </stylesheets>
     <children>
       <AnchorPane fx:id="anchorPaneMenu" layoutX="530.0" layoutY="281.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0" />
-      <AnchorPane fx:id="anchorPaneSideNav" layoutY="122.0" prefHeight="598.0" prefWidth="325.0" style="-fx-background-color: #0A4969;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="125.0">
+      <AnchorPane fx:id="anchorPaneSideNav" layoutY="122.0" prefHeight="598.0" prefWidth="335.0" style="-fx-background-color: #0A4969;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="125.0">
          <children>
             <ImageView fitHeight="332.0" fitWidth="327.0" layoutY="-8.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="-75.0">
                <image>
@@ -137,6 +137,11 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
+            <Label id="navLabel" fx:id="btnSideAutoBrandAndModel" alignment="BASELINE_LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="325.0" text="                  Marcas e Modelo" textFill="WHITE" visible="false">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="125.0" prefWidth="736.0" style="-fx-background-color: #032d4d;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -150,7 +155,7 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" maxHeight="90.0" minHeight="90.0" prefHeight="75.0" prefWidth="673.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label id="navMenu" fx:id="btnDashboard" alignment="CENTER" prefHeight="93.0" prefWidth="185.0" text=" Dashboard" textFill="#b7b7b7">
+                        <Label id="navMenu" fx:id="btnDashboard" alignment="CENTER" prefHeight="93.0" prefWidth="180.0" text=" Dashboard" textFill="#b7b7b7">
                            <graphic>
                               <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -183,7 +188,7 @@
                               </ImageView>
                            </graphic></Label>
                      </children></HBox>
-                  <Label id="navMenu" fx:id="btnMenu" layoutX="14.0" layoutY="9.0" prefHeight="32.0" prefWidth="325.0" text="    Menu" textFill="#b7b7b7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Label id="navMenu" fx:id="btnMenu" layoutX="14.0" layoutY="9.0" prefHeight="32.0" prefWidth="335.0" text="    Menu" textFill="#b7b7b7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="14.0" />
                      </font>

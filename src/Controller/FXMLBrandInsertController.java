@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.CarDAL;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 // </editor-fold>
-import DAO.CarDAL;
+
 /**
  * FXML Controller class
  *

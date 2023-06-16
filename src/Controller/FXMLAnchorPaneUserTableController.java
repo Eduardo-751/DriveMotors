@@ -1,11 +1,16 @@
 package Controller;
 
+import DAO.UserDAL;
+import Model.User;
+import Main.MainApplication;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.net.URL;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,10 +27,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.css.PseudoClass;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableRow;
 // </editor-fold>
-import DAO.UserDAL;
-import Model.User;
-import Main.MainApplication;
 
 /**
  * FXML Controller class
@@ -42,6 +47,7 @@ public class FXMLAnchorPaneUserTableController implements Initializable {
     @FXML private TableColumn<User, Integer> userPerfil;
     @FXML private TextField userFilter;
     @FXML private Button btnInsert, btnUpdate, btnDelete;
+    @FXML private CheckBox cbStatus;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -51,7 +57,12 @@ public class FXMLAnchorPaneUserTableController implements Initializable {
 
     // <editor-fold defaultstate="collapsed" desc="Create Table User"> 
     private void CreateTable() {
-        ObservableList<User> userList = FXCollections.observableArrayList(userDAO.getLista());
+        ObservableList<User> completeList = FXCollections.observableArrayList(userDAO.getList());
+        ObservableList<User> userList = FXCollections.observableArrayList();
+        for(User u : completeList){
+            if(u.isEnable() || cbStatus.isSelected())
+                userList.add(u);
+        }
         userNome.setCellValueFactory(new PropertyValueFactory<>("name"));
         userUsuario.setCellValueFactory(new PropertyValueFactory<>("login"));
         userPerfil.setCellValueFactory(new PropertyValueFactory<>("profile"));
@@ -108,7 +119,12 @@ public class FXMLAnchorPaneUserTableController implements Initializable {
         btnDelete.setOnAction((ActionEvent event) -> {
             User user = userTable.getSelectionModel().getSelectedItem();
             if (user != null) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Você realmente deseja excluir o usuario " + user.getName() + "?", ButtonType.YES, ButtonType.NO);
+                String str;
+                if(user.isEnable())
+                    str = "Você realmente deseja Desativar o Usuario selecionado?";
+                else
+                    str = "Você realmente deseja Ativar o Usuario selecionado?";
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, str, ButtonType.YES, ButtonType.NO);
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.YES) {
                         userDAO.excluiUsuario(user);
@@ -116,7 +132,39 @@ public class FXMLAnchorPaneUserTableController implements Initializable {
                     }
                 });
             } else
-                showAlert(Alert.AlertType.ERROR, "Pro favor escolha um usuário da tabela!");
+                showAlert(Alert.AlertType.ERROR, "Por favor escolha um usuário da tabela!");
+        });
+        
+        userTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+                if(userTable.getSelectionModel().getSelectedItem() != null)
+                {
+                    User user = userTable.getSelectionModel().getSelectedItem();
+                    if(!user.isEnable())
+                        btnDelete.setText("Ativar");
+                    else
+                        btnDelete.setText("Desativar");
+                }
+             }
+        });
+        
+        userTable.setRowFactory(tableView -> {
+            TableRow<User> row = new TableRow<>();
+            PseudoClass higlighted = PseudoClass.getPseudoClass("disable");
+            row.itemProperty().addListener((obs, oldOrder, newOrder) -> {
+                if (newOrder != null && newOrder.getStatus() != null) {
+                    row.pseudoClassStateChanged(higlighted, newOrder.getStatus().equals("Inativo"));
+                } else {
+                    row.pseudoClassStateChanged(higlighted, false);
+                }
+            });
+            return row;
+        });
+        
+        cbStatus.setOnAction ((ActionEvent event) -> {
+            userFilter.setText(null);
+            CreateTable();
         });
     }// </editor-fold>
     

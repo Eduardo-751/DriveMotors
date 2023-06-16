@@ -1,5 +1,8 @@
 package Controller;
 
+import Main.MainApplication;
+import DAO.ClientDAL;
+import Model.Client;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.io.IOException;
 import java.net.URL;
@@ -17,9 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 // </editor-fold>
-import Main.MainApplication;
-import DAO.ClientDAL;
-import Model.Client;
+
 /**
  * FXML Controller class
  *
@@ -54,7 +55,7 @@ public class FXMLAnchorPaneClientInsertController implements Initializable {
         });
         
         btnRegister.setOnAction((ActionEvent event) -> {
-            newClient = new Client(lblCpf.getText(), lblName.getText(), lblRg.getText(), lblEmail.getText());
+            newClient = new Client(lblCpf.getText(), lblName.getText(), lblRg.getText(), lblEmail.getText(), true);
             if (MainApplication.isRegistering){
                 if(clientDAO.cadastraUsuario(newClient)){
                     showAlert(Alert.AlertType.INFORMATION, "Cliente Cadastrado com Sucesso!");
@@ -113,14 +114,7 @@ public class FXMLAnchorPaneClientInsertController implements Initializable {
         lblRg.setPromptText("11.111.111-11");
     }// </editor-fold>
     
-    public void SetNew(Client client){
-        this.client = client;
-        lblName.setText(client.getName());
-        lblCpf.setText(client.getCpf());
-        lblRg.setText(client.getRg());
-        lblEmail.setText(client.getEmail());
-    }
-    
+    // <editor-fold defaultstate="collapsed" desc="Manage AnchorPane"> 
     private void setAnchorPaneChildren(){
         if(MainApplication.isRegistering){
             btnRegister.setText("Cadastrar");
@@ -141,6 +135,14 @@ public class FXMLAnchorPaneClientInsertController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
         } 
+    }// </editor-fold>
+    
+    public void SetNew(Client client){
+        this.client = client;
+        lblName.setText(client.getName());
+        lblCpf.setText(client.getCpf());
+        lblRg.setText(client.getRg());
+        lblEmail.setText(client.getEmail());
     }
     
     private void showAlert(Alert.AlertType alertType, String message) {

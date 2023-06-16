@@ -10,17 +10,19 @@ public class Client {
     private String cpf = null;
     private String rg = null;
     private String email = null;
+    private boolean enable;
     
     // <editor-fold defaultstate="collapsed" desc="Constructor"> 
     public Client() {
         
     }
     
-    public Client(String cpf, String name, String rg, String email) {
+    public Client(String cpf, String name, String rg, String email, boolean enable) {
         this.cpf = cpf;
         this.name = name;
         this.rg = rg;
         this.email = email;
+        this.enable = enable;
     }// </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Gets and Sets">  
@@ -53,5 +55,17 @@ public class Client {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+    public boolean isEnable() {
+        return enable;
+    }
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    } 
+    public String getStatus(){
+        if(enable)
+            return "Ativo";
+        else
+            return "Inativo";
     }// </editor-fold>
 }
