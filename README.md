@@ -2,6 +2,10 @@
 
 The DriveMotors Car System with JavaFX is a desktop application designed to manage the inventory of cars in a car dealership. The system provides a graphical user interface (GUI) built with JavaFX, allowing users to interact with the application and perform various operations related to car inventory, sales, and customer management.
 
+
+https://github.com/Eduardo-751/DriveMotors/assets/92553960/715cdb57-12aa-48c6-971b-56aa4f83622b
+
+
 ## Features
 
 - Car Inventory Management: The system allows administrators to add, edit, and delete car listings, including details such as make, model, year, price, and availability status.
