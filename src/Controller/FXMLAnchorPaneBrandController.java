@@ -26,7 +26,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 // </editor-fold>
 /**
  * FXML Controller class
@@ -37,19 +36,22 @@ public class FXMLAnchorPaneBrandController implements Initializable {
     
     CarDAL carDAO = new CarDAL();
     ComboBoxDataInsert cbos = new ComboBoxDataInsert();
-    @FXML private AnchorPane anchorPaneMenu;
     
     @FXML private ComboBox cbBrand;
     @FXML private TextField txtModel;
     @FXML private ScrollPane spAccessories;
     @FXML private CheckBox cbAbsBreak, cbAirCondic, cbAlarm, cbAlloyWheels, cbDigitalRadio;
     @FXML private CheckBox cbElecWindws, cbParkingAssis, cbPowerSteering, cbcbRearView, dbKeylessStart;
-    @FXML private Button btnUpdate, btnDelete;
     @FXML private CheckBox cbBrandStatus, cbModelStatus;
+    @FXML private Button btnUpdate;
     @FXML private TableView<Brand> brandTable;
     @FXML private TableView<Model> modelTable;
-    @FXML private TableColumn<Model, String> brandName, brandStatus, modelName, modelStatus;
-    @FXML private TableColumn<Model, Integer> brandId, modelId;
+    @FXML private TableColumn<Brand, String> brandName, brandStatus;
+    @FXML private TableColumn<Model, String> modelName, modelStatus;
+    @FXML private TableColumn<Brand, Integer> brandId;
+    @FXML private TableColumn<Model, Integer> modelId;
+    @FXML private TableColumn<Brand, Button> brandBtnStatus;
+    @FXML private TableColumn<Model, Button> modelBtnStatus;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -65,10 +67,17 @@ public class FXMLAnchorPaneBrandController implements Initializable {
         for(Brand b : completeList){
             if(b.isEnable() || cbBrandStatus.isSelected())
                 brandList.add(b);
+            Button btnStatus = new Button(); {
+                btnStatus.setOnAction((ActionEvent event) -> {
+                    btnDeleteBrand(b);
+                });
+            }
+            b.setBtnStatus(btnStatus);
         }
         brandId.setCellValueFactory(new PropertyValueFactory<>("id"));
         brandName.setCellValueFactory(new PropertyValueFactory<>("name"));
         brandStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        brandBtnStatus.setCellValueFactory(new PropertyValueFactory<>("BtnStatus"));
         brandTable.setItems(brandList);
     }
 
@@ -81,10 +90,17 @@ public class FXMLAnchorPaneBrandController implements Initializable {
             for(Model m : completeList){
                 if(m.isEnable() || cbModelStatus.isSelected())
                     modelList.add(m);
+                Button btnStatus = new Button(); {
+                    btnStatus.setOnAction((ActionEvent event) -> {
+                        btnDelete(m);
+                    });
+                }
+                m.setBtnStatus(btnStatus);
             }
             modelId.setCellValueFactory(new PropertyValueFactory<>("id"));
             modelName.setCellValueFactory(new PropertyValueFactory<>("name"));
             modelStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+            modelBtnStatus.setCellValueFactory(new PropertyValueFactory<>("BtnStatus"));
             modelTable.setItems(modelList);
             resetFields();
         }
@@ -127,11 +143,6 @@ public class FXMLAnchorPaneBrandController implements Initializable {
                     cbBrand.setValue(selectionModel.getBrand().getName());
                     txtModel.setText(selectionModel.getName());
                     setAccessories(carDAO.getModel("model_name", txtModel.getText().toUpperCase()).getAccessoriesId());
-                    Model m = modelTable.getSelectionModel().getSelectedItem();
-                    if(!m.isEnable())
-                        btnDelete.setText("Ativar");
-                    else
-                        btnDelete.setText("Desativar");
                 }
              }
         });
@@ -165,29 +176,6 @@ public class FXMLAnchorPaneBrandController implements Initializable {
             else
                 showAlert(Alert.AlertType.ERROR, "Pro favor escolha um Modelo da tabela!");
         });
-
-        btnDelete.setOnAction((ActionEvent event) -> {
-            if (modelTable.getSelectionModel().getSelectedItem() != null) {
-                Model selectionModel = modelTable.getSelectionModel().getSelectedItem();
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Você realmente deseja excluir o Modelo selecionado?", ButtonType.YES, ButtonType.NO);
-                alert.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.YES) {
-                        carDAO.DeleteModel(selectionModel);
-                        CreateModelTable();
-                    }
-                });
-                if(modelTable.getItems().size() == 0){
-                    alert = new Alert(Alert.AlertType.CONFIRMATION, "Esta Marca nao contem nenhum Modelo, gostaria de Desativar-la?", ButtonType.YES, ButtonType.NO);
-                    alert.showAndWait().ifPresent(response -> {
-                        carDAO.DeleteBrand(selectionModel.getBrand());
-                        CreateBrandTable();
-                            
-                    });
-                }
-            }
-            else
-                showAlert(Alert.AlertType.ERROR, "Pro favor escolha um Modelo da tabela!");
-        });
         
         cbBrandStatus.setOnAction((ActionEvent event) -> {
             CreateBrandTable();
@@ -196,6 +184,43 @@ public class FXMLAnchorPaneBrandController implements Initializable {
         cbModelStatus.setOnAction((ActionEvent event) -> {
             CreateModelTable();
         });
+    }// </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Set Event to Edit and Delete itens from the Table">
+    private void btnDeleteBrand(Brand brand) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Você realmente deseja excluir a Marca selecionado?", ButtonType.YES, ButtonType.NO);
+        alert.setGraphic(null);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                carDAO.DeleteBrand(brand);
+                CreateBrandTable();
+            }
+        });
+    }
+
+    private void btnDelete(Model model) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Você realmente deseja excluir o Modelo selecionado?", ButtonType.YES, ButtonType.NO);
+        alert.setGraphic(null);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                carDAO.DeleteModel(model);
+                CreateModelTable();
+            }
+        });
+        if(modelTable.getItems().size() == 0){
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Esta Marca nao contem nenhum Modelo, gostaria de Desativar-la?", ButtonType.YES, ButtonType.NO);
+            alert.setGraphic(null);
+            alert.setHeaderText(null);
+            alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.showAndWait().ifPresent(response -> {
+                carDAO.DeleteBrand(model.getBrand());
+                CreateBrandTable();
+            });
+        }
     }// </editor-fold>
     
     private void setAccessories(int id){
@@ -223,6 +248,9 @@ public class FXMLAnchorPaneBrandController implements Initializable {
     
     private void showAlert(Alert.AlertType alertType, String message) {
         Alert alert = new Alert(alertType);
+        alert.setGraphic(null);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
         alert.show();
     }

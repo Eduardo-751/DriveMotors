@@ -1,5 +1,7 @@
 package Model;
 
+import javafx.scene.control.Button;
+
 /**
  *
  * @author eduardo
@@ -11,6 +13,7 @@ public class Client {
     private String rg = null;
     private String email = null;
     private boolean enable;
+    private Button btnStatus, btnUpdate;
     
     // <editor-fold defaultstate="collapsed" desc="Constructor"> 
     public Client() {
@@ -67,5 +70,22 @@ public class Client {
             return "Ativo";
         else
             return "Inativo";
+    } public void setBtnStatus(Button btn){
+        this.btnStatus = btn;
+    }
+    public Button getBtnStatus(){
+        if(enable)
+            btnStatus.setText("Desativar");
+        else
+            btnStatus.setText("Ativar");
+        
+        return btnStatus;
+    }
+    public void setBtnUpdate(Button btn){
+        this.btnUpdate= btn;
+    }
+    public Button getBtnUpdate(){
+        btnUpdate.setText("Editar");
+        return btnUpdate;
     }// </editor-fold>
 }

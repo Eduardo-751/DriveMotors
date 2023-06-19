@@ -24,6 +24,22 @@
          </font></Label>
       <AnchorPane AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
          <children>
+            <AnchorPane fx:id="apUpdate" prefHeight="151.0" prefWidth="880.0" AnchorPane.bottomAnchor="195.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="85.0">
+               <children>
+                  <TextField fx:id="txtUpdatePassword2" layoutX="368.0" layoutY="44.0" prefHeight="35.0" prefWidth="250.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="265.0" AnchorPane.topAnchor="44.0" />
+                  <Label layoutX="266.0" layoutY="50.0" text="Nova Senha: " AnchorPane.rightAnchor="509.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtUpdatePassword3" layoutX="368.0" layoutY="87.0" prefHeight="35.0" prefWidth="250.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="265.0" AnchorPane.topAnchor="87.0" />
+                  <Label layoutX="229.0" layoutY="94.0" text="Confirmar Senha: " AnchorPane.rightAnchor="509.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" hvalue="1.0" layoutX="85.0" layoutY="196.0" prefHeight="254.0" prefWidth="880.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="280.0">
                <content>
                   <GridPane alignment="CENTER" hgap="5.0" prefHeight="90.0" prefWidth="880.0" vgap="5.0">
@@ -61,15 +77,15 @@
                   <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                </padding>
             </ScrollPane>
-            <GridPane hgap="5.0" layoutX="340.0" maxHeight="288.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="119.0" prefWidth="350.0" vgap="5.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="50.0">
+            <GridPane hgap="5.0" layoutX="340.0" maxHeight="288.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="119.0" prefWidth="350.0" vgap="5.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="50.0">
               <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="100.0" minWidth="-Infinity" prefWidth="100.0" />
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="150.0" minWidth="-Infinity" prefWidth="150.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="250.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="30.0" minHeight="35.0" prefHeight="35.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="30.0" minHeight="35.0" prefHeight="35.0" valignment="BASELINE" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="30.0" minHeight="35.0" prefHeight="35.0" valignment="BASELINE" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="30.0" minHeight="35.0" prefHeight="35.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="30.0" minHeight="35.0" prefHeight="35.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="30.0" minHeight="35.0" prefHeight="35.0" valignment="BOTTOM" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label text="Nome:">
@@ -82,13 +98,13 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label text="Senha:" GridPane.rowIndex="2">
+                  <TextField fx:id="txtName" prefHeight="35.0" prefWidth="250.0" GridPane.columnIndex="1" />
+                  <TextField fx:id="txtLogin" prefHeight="35.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="lblPassword" text="Senha Antiga: " GridPane.rowIndex="2">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtName" prefHeight="35.0" prefWidth="250.0" GridPane.columnIndex="1" />
-                  <TextField fx:id="txtLogin" prefHeight="35.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="txtPassword" prefHeight="35.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>

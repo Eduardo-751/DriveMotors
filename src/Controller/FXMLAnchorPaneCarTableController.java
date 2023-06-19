@@ -44,10 +44,9 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPCell;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableRow;
 // </editor-fold>
 
@@ -65,23 +64,43 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
     @FXML private TableColumn<Car, String> carBrand, carModel, carPlate, carStatus;
     @FXML private TableColumn<Car, Integer> carYear, carMiliage;
     @FXML private TableColumn<Car, Double> carPrice;
+    @FXML private TableColumn<Car, Button> carBtnStatus, carBtnUpdate;
     @FXML private TextField carFilter;
-    @FXML private Button btnInsert, btnUpdate, btnDelete, btnGerarPDF;
+    @FXML private Button btnInsert, btnGerarPDF;
     @FXML private CheckBox cbStatus;
+    @FXML private Pagination pagination;
+    
+    private int rowsPerPage = 14;
+    private ObservableList<Car> carList = FXCollections.observableArrayList();
+    private FilteredList<Car> filteredCars;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        CreateTable();
+        pagination.setCurrentPageIndex(0);
         setEventListeners();
+        createTable();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Create Table Car">  
-    private void CreateTable() {
+    private void createTable() {
         ObservableList<Car> completeList = FXCollections.observableArrayList(carDAO.getList());
-        ObservableList<Car> carList = FXCollections.observableArrayList();
-        for(Car c : completeList){
-            if(c.isEnable() || cbStatus.isSelected())
+        carList = FXCollections.observableArrayList();
+        for (Car c : completeList) {
+            if (c.isEnable() || cbStatus.isSelected()) {
                 carList.add(c);
+                Button btnUpdate = new Button(); {
+                    btnUpdate.setOnAction((ActionEvent event) -> {
+                        btnUpdate(c);
+                    });
+                }
+                Button btnStatus = new Button(); {
+                    btnStatus.setOnAction((ActionEvent event) -> {
+                        btnDelete(c);
+                    });
+                }
+                c.setBtnUpdate(btnUpdate);
+                c.setBtnStatus(btnStatus);
+            }
         }
         carBrand.setCellValueFactory(new PropertyValueFactory<>("brandName"));
         carModel.setCellValueFactory(new PropertyValueFactory<>("modelName"));
@@ -90,26 +109,46 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
         carPlate.setCellValueFactory(new PropertyValueFactory<>("plate"));
         carPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         carStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        FilteredList<Car> filteredCars = new FilteredList<>(carList);
-
+        carBtnStatus.setCellValueFactory(new PropertyValueFactory<>("BtnStatus"));
+        carBtnUpdate.setCellValueFactory(new PropertyValueFactory<>("BtnUpdate"));
+        
+        filteredCars = new FilteredList<>(carList);
+        
         carFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredCars.setPredicate(car -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                String lowerCaseFilter = newValue.toLowerCase();
-                return car.getBrandName().toLowerCase().contains(lowerCaseFilter)
-                        || car.getModelName().toLowerCase().contains(lowerCaseFilter)
-                        || car.getYear().toString().toLowerCase().contains(lowerCaseFilter)
-                        || car.getPlate().toLowerCase().contains(lowerCaseFilter);
-            });
+            setPredicateFilter(newValue);
+            pagination.setCurrentPageIndex(0);
+            changeTableView(pagination.getCurrentPageIndex(), rowsPerPage);
         });
+        changeTableView(pagination.getCurrentPageIndex(), rowsPerPage);
+        pagination.currentPageIndexProperty().addListener(
+                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), rowsPerPage));
+    }
 
-        SortedList<Car> sortedCars = new SortedList<>(filteredCars);
-        sortedCars.comparatorProperty().bind(carTable.comparatorProperty());
-        carTable.setItems(sortedCars);
+    private void changeTableView(int index, int limit) {
+        int totalPage = (int) (Math.ceil(filteredCars.size() * 1.0 / rowsPerPage));
+        pagination.setPageCount(totalPage);
+
+        int fromIndex = index * limit;
+        int toIndex = Math.min(fromIndex + limit, filteredCars.size());
+        
+        SortedList<Car> sortedData = new SortedList<>(
+                FXCollections.observableArrayList(filteredCars.subList(fromIndex, toIndex)));
+        sortedData.comparatorProperty().bind(carTable.comparatorProperty());
+        
+        carTable.setItems(sortedData);
+    }
+
+    private void setPredicateFilter(String newValue){
+        filteredCars.setPredicate(car -> {
+        if (newValue == null || newValue.isEmpty()) {
+            return true;
+        }
+        String lowerCaseFilter = newValue.toLowerCase();
+        return car.getBrandName().toLowerCase().contains(lowerCaseFilter)
+               || car.getModelName().toLowerCase().contains(lowerCaseFilter)
+               || car.getYear().toString().toLowerCase().contains(lowerCaseFilter)
+               || car.getPlate().toLowerCase().contains(lowerCaseFilter);
+        });
     }// </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Set Event to Components">  
@@ -125,61 +164,6 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
             }
         });
 
-        btnUpdate.setOnAction((ActionEvent event) -> {
-            Car car = carTable.getSelectionModel().getSelectedItem();
-            if (car != null) {
-                MainApplication.isEditing = true;
-                car.setAccessories(car.getAccessoriesId(), carDAO.getAccessories("accessories_id", String.valueOf(car.getAccessoriesId())));
-                try {
-                    FXMLLoader loader = new FXMLLoader();
-                    AnchorPane page = (AnchorPane) loader.load(getClass().getResource("../View/FXMLAnchorPaneCarInsert.fxml").openStream());
-                    FXMLAnchorPaneCarInsertController controller = (FXMLAnchorPaneCarInsertController) loader.getController();
-                    controller.SetNew(car);
-
-                    anchorPaneMenu.getChildren().setAll(page);
-                } catch (IOException ex) {
-                    Logger.getLogger(FXMLAnchorPaneCarTableController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Por favor escolha um Automóvel da tabela!");
-            }
-        });
-
-        btnDelete.setOnAction((ActionEvent event) -> {
-            Car car = carTable.getSelectionModel().getSelectedItem();
-            if (car != null) {
-                String str;
-                if(car.isEnable())
-                    str = "Você realmente deseja Desativar o automóvel selecionado?";
-                else
-                    str = "Você realmente deseja Ativar o automóvel selecionado?";
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, str, ButtonType.YES, ButtonType.NO);
-                    alert.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.YES) {
-                        carDAO.DeleteCar(car);
-                        CreateTable();
-                    }
-                });
-            }
-            else
-                showAlert(Alert.AlertType.ERROR, "Por favor escolha um Automóvel da tabela!");
-
-        });
-        
-        carTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-                if(carTable.getSelectionModel().getSelectedItem() != null)
-                {
-                    Car car = carTable.getSelectionModel().getSelectedItem();
-                    if(!car.isEnable())
-                        btnDelete.setText("Ativar");
-                    else
-                        btnDelete.setText("Desativar");
-                }
-             }
-        });
-        
         carTable.setRowFactory(tableView -> {
             TableRow<Car> row = new TableRow<>();
             PseudoClass higlighted = PseudoClass.getPseudoClass("disable");
@@ -192,43 +176,79 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
             });
             return row;
         });
-        
-        btnGerarPDF.setOnAction ((ActionEvent event) -> {
+
+        btnGerarPDF.setOnAction((ActionEvent event) -> {
             generateDocument();
         });
-        
-        cbStatus.setOnAction ((ActionEvent event) -> {
-            carFilter.setText(null);
-            CreateTable();
+
+        cbStatus.setOnAction((ActionEvent event) -> {
+            createTable();
+            setPredicateFilter(carFilter.getText());
+            changeTableView(pagination.getCurrentPageIndex(), rowsPerPage);
+        });
+    }// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Set Event to Edit and Delete itens from the Table">
+    private void btnUpdate(Car car) {
+        MainApplication.isEditing = true;
+        car.setAccessories(car.getAccessoriesId(), carDAO.getAccessories("accessories_id", String.valueOf(car.getAccessoriesId())));
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane page = (AnchorPane) loader.load(getClass().getResource("../View/FXMLAnchorPaneCarInsert.fxml").openStream());
+            FXMLAnchorPaneCarInsertController controller = (FXMLAnchorPaneCarInsertController) loader.getController();
+            controller.SetNew(car);
+
+            anchorPaneMenu.getChildren().setAll(page);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLAnchorPaneCarTableController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void btnDelete(Car car) {
+        String str;
+        if (car.isEnable()) {
+            str = "Você realmente deseja Desativar o automóvel selecionado?";
+        } else {
+            str = "Você realmente deseja Ativar o automóvel selecionado?";
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, str, ButtonType.YES, ButtonType.NO);
+        alert.setGraphic(null);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                carDAO.DeleteCar(car);
+                createTable();
+            }
         });
     }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Generate PDF File">  
     public void generateDocument() {
-         Document document  = new Document(PageSize.A4);
-         FileChooser f = new FileChooser();
-         f.getExtensionFilters().add(new ExtensionFilter("PDF", "*.pdf"));
-         File file = f.showSaveDialog(new Stage());
-         if(file != null){
-            try{
-               PdfWriter.getInstance(document, new FileOutputStream(file.getAbsolutePath()));
-               document.open();
-               
-               Image imgTitulo = null;
+        Document document = new Document(PageSize.A4);
+        FileChooser f = new FileChooser();
+        f.getExtensionFilters().add(new ExtensionFilter("PDF", "*.pdf"));
+        File file = f.showSaveDialog(new Stage());
+        if (file != null) {
+            try {
+                PdfWriter.getInstance(document, new FileOutputStream(file.getAbsolutePath()));
+                document.open();
+
+                Image imgTitulo = null;
                 try {
                     imgTitulo = Image.getInstance("src/Images/logo1.jpg");
                     imgTitulo.setWidthPercentage(50);
                 } catch (Exception e) {
                     showAlert(AlertType.ERROR, "Imagem nao Encontrada!");
                 }
-                
+
                 document.add(new Paragraph(" "));
-                
+
                 if (imgTitulo != null) {
                     imgTitulo.setAlignment(Element.ALIGN_CENTER);
                     document.add(imgTitulo);
                 }
-                
+
                 Paragraph auxParagraph = new Paragraph("Relatório PDF", FontFactory.getFont(FontFactory.TIMES_ROMAN, 24F));
                 auxParagraph.setAlignment(1);
                 document.add(auxParagraph);
@@ -236,30 +256,30 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
                 Paragraph paragrafoSessao = new Paragraph("__________________________________________________________");
                 paragrafoSessao.setAlignment(Element.ALIGN_CENTER);
                 document.add(paragrafoSessao);
-                
+
                 auxParagraph = new Paragraph("  ");
                 document.add(auxParagraph);
-               
-               PdfPTable  table = new PdfPTable (5);
-               
-               PdfPCell brandCell = new PdfPCell(new Phrase(20F, "Marca", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
-               brandCell.setBackgroundColor(new BaseColor(10, 83, 120));
-               table.addCell(brandCell);
-               PdfPCell  modelCell = new PdfPCell (new Phrase(20F, "Modelo", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
-               modelCell.setBackgroundColor(new BaseColor(10, 83, 120));
-               table.addCell(modelCell);
-               PdfPCell  yearCell = new PdfPCell (new Phrase(20F, "Ano", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
-               yearCell.setBackgroundColor(new BaseColor(10, 83, 120));
-               table.addCell(yearCell);
-               PdfPCell  plateCell = new PdfPCell (new Phrase(20F, "Placa", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
-               plateCell.setBackgroundColor(new BaseColor(10, 83, 120));
-               table.addCell(plateCell);
-               PdfPCell  priceCell = new PdfPCell (new Phrase(20F, "valor", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
-               priceCell.setBackgroundColor(new BaseColor(10, 83, 120));
-               table.addCell(priceCell);
-               
-               int identity = 1;
-               for (Car c : carTable.getItems()) {
+
+                PdfPTable table = new PdfPTable(5);
+
+                PdfPCell brandCell = new PdfPCell(new Phrase(20F, "Marca", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
+                brandCell.setBackgroundColor(new BaseColor(10, 83, 120));
+                table.addCell(brandCell);
+                PdfPCell modelCell = new PdfPCell(new Phrase(20F, "Modelo", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
+                modelCell.setBackgroundColor(new BaseColor(10, 83, 120));
+                table.addCell(modelCell);
+                PdfPCell yearCell = new PdfPCell(new Phrase(20F, "Ano", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
+                yearCell.setBackgroundColor(new BaseColor(10, 83, 120));
+                table.addCell(yearCell);
+                PdfPCell plateCell = new PdfPCell(new Phrase(20F, "Placa", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
+                plateCell.setBackgroundColor(new BaseColor(10, 83, 120));
+                table.addCell(plateCell);
+                PdfPCell priceCell = new PdfPCell(new Phrase(20F, "valor", FontFactory.getFont(FontFactory.HELVETICA, 12F, BaseColor.WHITE)));
+                priceCell.setBackgroundColor(new BaseColor(10, 83, 120));
+                table.addCell(priceCell);
+
+                int identity = 1;
+                for (Car c : carTable.getItems()) {
 
                     PdfPCell c1 = new PdfPCell(new Phrase(c.getBrandName(), FontFactory.getFont(FontFactory.HELVETICA, 9F)));
                     PdfPCell c2 = new PdfPCell(new Phrase(c.getModelName(), FontFactory.getFont(FontFactory.HELVETICA, 9F)));
@@ -285,25 +305,26 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
                     table.addCell(c5);
                     identity++;
                 }
-               
-               document.add(table);
-               
-               showAlert(AlertType.INFORMATION, "PDF Gerado com sucesso!");
-               document.close();
-            }
-            catch(DocumentException | FileNotFoundException ex){
+
+                document.add(table);
+
+                showAlert(AlertType.INFORMATION, "PDF Gerado com sucesso!");
+                document.close();
+            } catch (DocumentException | FileNotFoundException ex) {
 
             }
-         }
-        else{
+        } else {
             showAlert(AlertType.ERROR, "Erro ao Salvar o Arquivo!");
         }
     }// </editor-fold>
-    
+
     private void showAlert(Alert.AlertType alertType, String message) {
         Alert alert = new Alert(alertType);
+        alert.setGraphic(null);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
         alert.show();
     }
-    
+
 }

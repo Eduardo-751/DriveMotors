@@ -386,7 +386,11 @@ public class CarDAL extends MySQL {
     // <editor-fold defaultstate="collapsed" desc="Delete Brand and Model">   
     // Método para excluir um automovel
     public boolean DeleteBrand(Brand brand) {
-        String statementString = "UPDATE brand SET enable = false WHERE brand_id = ?";
+        String statementString;
+        if(brand.isEnable())
+            statementString = "UPDATE brand SET enable = false WHERE brand_id = ?";
+        else
+            statementString = "UPDATE brand SET enable = true WHERE brand_id = ?";
         try {
             try (PreparedStatement sql = getConn().prepareStatement(statementString)) {
                 sql.setInt(1, brand.getId());

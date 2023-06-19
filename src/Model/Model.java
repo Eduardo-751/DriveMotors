@@ -1,5 +1,7 @@
 package Model;
 
+import javafx.scene.control.Button;
+
 /**
  *
  * @author eduardo
@@ -10,6 +12,7 @@ public class Model {
     private Brand brand;
     private int accessoriesId;
     private boolean enable;
+    private Button btnStatus;
 
     // <editor-fold defaultstate="collapsed" desc="Constructor"> 
     public Model() {
@@ -64,5 +67,15 @@ public class Model {
             return "Ativo";
         else
             return "Inativo";
+    }public void setBtnStatus(Button btn){
+        this.btnStatus = btn;
+    }
+    public Button getBtnStatus(){
+        if(enable)
+            btnStatus.setText("Desativar");
+        else
+            btnStatus.setText("Ativar");
+        
+        return btnStatus;
     }// </editor-fold> 
 }

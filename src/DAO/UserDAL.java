@@ -91,7 +91,7 @@ public class UserDAL extends MySQL{
     // Método para retornar todos os usuario como um arraylist
     public ArrayList<User> getList() {
 
-        String statementString = "SELECT * FROM user ORDER BY user_id";
+        String statementString = "SELECT * FROM user ORDER BY enable DESC, user_id";
         ArrayList<User> lista = new ArrayList<>();
 
         try {

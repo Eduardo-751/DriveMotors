@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Button;
 
 /**
  *
@@ -17,6 +18,7 @@ public class User {
     private String name = null;
     private String profile = null;
     private boolean enable;
+    private Button btnStatus, btnUpdate;
 
     // <editor-fold defaultstate="collapsed" desc="Constructor">   
     public User() {
@@ -78,6 +80,23 @@ public class User {
             return "Ativo";
         else
             return "Inativo";
+    }public void setBtnStatus(Button btn){
+        this.btnStatus = btn;
+    }
+    public Button getBtnStatus(){
+        if(enable)
+            btnStatus.setText("Desativar");
+        else
+            btnStatus.setText("Ativar");
+        
+        return btnStatus;
+    }
+    public void setBtnUpdate(Button btn){
+        this.btnUpdate= btn;
+    }
+    public Button getBtnUpdate(){
+        btnUpdate.setText("Editar");
+        return btnUpdate;
     }// </editor-fold>   
     
     public static char[] hexCodes(byte[] text) {

@@ -202,6 +202,11 @@
                   </Label>
                </children>
             </AnchorPane>
+            <ImageView fx:id="btnLogout" fitHeight="32.0" fitWidth="16.0" layoutX="1030.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="8.0">
+               <image>
+                  <Image url="@../Images/logout.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
     </children>

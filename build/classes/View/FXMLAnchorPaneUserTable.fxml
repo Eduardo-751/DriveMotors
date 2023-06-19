@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -23,21 +24,20 @@
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="btnUpdate" mnemonicParsing="false" prefWidth="125.0" text="Editar">
-               <font>
-                  <Font size="14.0" />
-               </font></Button>
-            <Button fx:id="btnDelete" mnemonicParsing="false" prefWidth="125.0" text="Excluir">
-               <font>
-                  <Font size="14.0" />
-               </font></Button>
          </children>
       </HBox>
+      <Pagination fx:id="pagination" layoutX="20.0" layoutY="20.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="65.0" />
       <TableView fx:id="userTable" layoutX="10.0" layoutY="10.0" prefHeight="342.0" prefWidth="704.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="65.0">
          <columns>
             <TableColumn fx:id="userNome" editable="false" prefWidth="400.0" text="Nome" />
-            <TableColumn fx:id="userUsuario" editable="false" minWidth="0.0" prefWidth="400.0" text="Usuario" />
-            <TableColumn fx:id="userPerfil" editable="false" minWidth="1.0" prefWidth="260.0" text="Perfil" />
+            <TableColumn fx:id="userUsuario" editable="false" minWidth="0.0" prefWidth="343.0" text="Usuario" />
+            <TableColumn fx:id="userPerfil" editable="false" minWidth="1.0" prefWidth="172.0" text="Perfil" />
+            <TableColumn editable="false" prefWidth="150.0" text="Actions">
+               <columns>
+                  <TableColumn fx:id="userBtnUpdate" editable="false" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Editar" />
+                  <TableColumn fx:id="userBtnStatus" editable="false" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Atv/Des" />
+               </columns>
+            </TableColumn>
          </columns>
       </TableView>
       <Label layoutX="10.0" layoutY="10.0" text="Search Box" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="25.0">

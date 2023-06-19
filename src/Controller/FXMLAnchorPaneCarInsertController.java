@@ -72,6 +72,9 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
     private void setEventListeners() {
         btnCancel.setOnAction((ActionEvent event) -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Deseja realmente cancelar?", ButtonType.YES, ButtonType.NO);
+            alert.setGraphic(null);
+            alert.setHeaderText(null);
+            alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES)
                     loadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
@@ -297,6 +300,9 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
     
     private void showAlert(Alert.AlertType alertType, String message) {
         Alert alert = new Alert(alertType);
+        alert.setGraphic(null);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
         alert.show();
     }

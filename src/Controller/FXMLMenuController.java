@@ -28,6 +28,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.image.ImageView;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 // </editor-fold>
 
 /**
@@ -43,7 +47,7 @@ public class FXMLMenuController implements Initializable {
     
     @FXML private AnchorPane anchorPaneSideNav, anchorPaneMenu;
     @FXML private VBox vbNavMenu;
-    @FXML private ImageView btnExit;
+    @FXML private ImageView btnExit, btnLogout;
     @FXML private Label btnMenu;
     @FXML private Label btnDashboard;
     @FXML private Label btnAuto, btnSideAuto, btnSideAutoCadastrar, btnSideAutoEditar, btnSideAutoBrandAndModel;
@@ -54,12 +58,12 @@ public class FXMLMenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        SetEvent();
+        setEventListeners();
         LoadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
     }
 
     // <editor-fold defaultstate="collapsed" desc="Set Event to Components"> 
-    private void SetEvent() {
+    private void setEventListeners() {
         anchorPaneSideNav.setTranslateX(-335);
         btnMenu.setOnMouseClicked(event -> {
             if(anchorPaneSideNav.getTranslateX() == -335)
@@ -120,9 +124,43 @@ public class FXMLMenuController implements Initializable {
             if(CheckIfRegisteringToLoadDialog("Digite o CPF do Cliente:", clientDAO, "client_cpf", "../View/FXMLAnchorPaneClientInsert.fxml", "CPF não encontrado!"))
                 MainApplication.isEditing = true;
         });
-                
+        
+        btnLogout.setOnMouseClicked(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Voçê realmente gostaria de Deslogar do Usuario atual?", ButtonType.YES, ButtonType.NO);
+            alert.setGraphic(null);
+            alert.setHeaderText(null);
+            alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(FXMLMenuController.class.getResource("../View/FXMLLogin.fxml"));
+                        AnchorPane page = (AnchorPane) loader.load();
+
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(page));
+
+                        stage.initStyle(StageStyle.UNDECORATED);
+                        stage.show();
+                        stage = (Stage) btnLogout.getScene().getWindow();
+                        stage.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(FXMLMenuController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+        });
+        
         btnExit.setOnMouseClicked(event -> {
-            System.exit(0);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Voce realmente gostaria de Sair do Sistema?", ButtonType.YES, ButtonType.NO);
+            alert.setGraphic(null);
+            alert.setHeaderText(null);
+            alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    System.exit(0);
+                }
+            });
         });
     }// </editor-fold>
 
@@ -130,6 +168,9 @@ public class FXMLMenuController implements Initializable {
     private void CheckIfRegisteringToLoadAnchor(String fxmlResource){
         if(MainApplication.isRegistering || MainApplication.isEditing){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "As alterações que você fez talvez não sejam salvas.\nDeseja realmente sair?", ButtonType.YES, ButtonType.NO);
+            alert.setGraphic(null);
+            alert.setHeaderText(null);
+            alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
                     MainApplication.isRegistering = false;
@@ -154,6 +195,9 @@ public class FXMLMenuController implements Initializable {
     private boolean CheckIfRegisteringToLoadDialog(String dialog, MySQL dao, String field, String fxmlResource, String error){
         if(MainApplication.isRegistering || MainApplication.isEditing){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "As alterações que você fez talvez não sejam salvas.\nDeseja realmente sair?", ButtonType.YES, ButtonType.NO);
+            alert.setGraphic(null);
+            alert.setHeaderText(null);
+            alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
                     MainApplication.isRegistering = false;
@@ -171,6 +215,9 @@ public class FXMLMenuController implements Initializable {
         
         TextInputDialog td = new TextInputDialog();
         td.setHeaderText(dialog);
+        td.setGraphic(null);
+        td.setHeaderText(null);
+        td.getDialogPane().getStylesheets().add("/CSS/styles.css");
         td.showAndWait();
 
         Object aux = dao.getWithWhere(field, td.getResult());
@@ -195,6 +242,9 @@ public class FXMLMenuController implements Initializable {
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setGraphic(null);
+            alert.setHeaderText(null);
+            alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
             alert.setContentText(error);
             alert.show();
             return false;

@@ -56,7 +56,8 @@
     -fx-text-fill: -white;
 }
 .button:default {
-    -fx-background-color : -color;
+    -fx-background-color : #0080FF;
+    -fx-text-fill: -white;
 }
 .button:cancel {
     -fx-background-color : -abort;
@@ -99,37 +100,51 @@
  */
 .table-view {
     -fx-background-color: transparent;
-    -fx-border-color: -color;
+    -fx-text-alignment: right;
+}
+.table-row-cell{
+    -fx-table-cell-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: #0b72a5;
+    -fx-border-width: 0 0 1 0;
+    -fx-text-alignment: CENTER;
 }
 .table-row-cell:hover {
     -fx-background-color: -gray;
 }
 .table-row-cell:selected {
-    -fx-background-color: #55a5cd;
+    -fx-background-color: #0c87c4;
 }
 .table-row-cell:disable {
     -fx-text-background-color: -darkgray;
 }
-.table-view .column-header .label {
-   -fx-text-fill: white;
-   -fx-font-weight: bold; 
-   -fx-alignment: CENTER_LEFT;
+.table-row-cell:empty{
+    -fx-background-color:transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+.table-row-cell:empty:hover{
+    -fx-background-color:transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
 }
 .table-view .column-header {
     -fx-background-color : #0b72a5;
 }
-.table-view .virtual-flow .scroll-bar:horizontal .thumb {
-    -fx-background-color: transparent;
-}
-.table-row-cell{
-    -fx-table-cell-border-color: -darkGray;
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
 }
 .table-view .scroll-bar * {
     -fx-min-height: 0;
     -fx-pref-height: 0;
     -fx-max-height: 0;
-}
 
+    fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+}
 /*
  * **********
  * ComboBox
@@ -144,7 +159,7 @@
     -fx-cursor: hand;
 }
 .combo-box .list-cell {
-     -fx-text-fill : -black;
+    -fx-text-fill : -black;
 }
 
 /*
@@ -172,4 +187,27 @@
 }
 #RegisterScrollPane {
     -fx-border-color : -darkGray;
+}
+
+/*
+ * **********
+ * DIALOG
+ * **********
+*/
+.dialog-pane {
+    -fx-background-color: -fx-background;
+    -fx-padding: 0;
+}
+.dialog-pane > .content.label {
+    -fx-padding: 0.5em 0.5em 0.5em 0.5em;
+    -fx-text-fill: black;
+    -fx-font-size:13.0px;
+}
+.dialog-pane .button{
+    -fx-background-color : #0080FF;
+    -fx-text-fill: -white;
+}
+.dialog-pane .button:hover{
+    -fx-background-color : #004C99;
+    -fx-inner-border : -darkGray;
 }

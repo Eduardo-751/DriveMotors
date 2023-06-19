@@ -1,5 +1,7 @@
 package Model;
 
+import javafx.scene.control.Button;
+
 /**
  *
  * @author eduardo
@@ -10,7 +12,6 @@ public class Car {
     private int accessoriesId;
     private boolean[] acessoriesValue;
     private Model model;
-    private String modelName, brandName;
     private String color;
     private String transmission;
     private String drivetrain;
@@ -23,6 +24,7 @@ public class Car {
     private Double engine;
     private String notes;
     private boolean enable;
+    private Button btnStatus, btnUpdate;
 
     // <editor-fold defaultstate="collapsed" desc="Constructor">   
     public Car() {
@@ -32,8 +34,6 @@ public class Car {
             Integer year, String fuel, String plate, String renavam, Integer mileage, 
             Double price, Double engine, String notes, boolean enable) {
         this.model = model;
-        this.modelName = model.getName();
-        this.brandName = model.getBrand().getName();
         this.color = color;
         this.transmission = transmission;
         this.drivetrain = drivetrain;
@@ -52,8 +52,6 @@ public class Car {
             Double price, Double engine, String notes, boolean enable) {
         this.accessoriesId = accessoriesId;
         this.model = model;
-        this.modelName = model.getName();
-        this.brandName = model.getBrand().getName();
         this.color = color;
         this.transmission = transmission;
         this.drivetrain = drivetrain;
@@ -73,8 +71,6 @@ public class Car {
         this.carId = carId;
         this.accessoriesId = accessoriesId;
         this.model = model;
-        this.modelName = model.getName();
-        this.brandName = model.getBrand().getName();
         this.color = color;
         this.transmission = transmission;
         this.drivetrain = drivetrain;
@@ -103,16 +99,10 @@ public class Car {
         this.model = model;
     }
     public String getModelName() {
-        return modelName;
-    }
-    public void setModelName(String carModel) {
-        this.modelName = carModel;
+        return model.getName();
     }
     public String getBrandName() {
-        return brandName;
-    }
-    public void setBrandName(String carBrand) {
-        this.brandName = carBrand;
+        return model.getBrand().getName();
     }
     public String getColor() {
         return color;
@@ -201,5 +191,23 @@ public class Car {
             return "Ativo";
         else
             return "Inativo";
+    }
+    public void setBtnStatus(Button btn){
+        this.btnStatus = btn;
+    }
+    public Button getBtnStatus(){
+        if(enable)
+            btnStatus.setText("Desativar");
+        else
+            btnStatus.setText("Ativar");
+        
+        return btnStatus;
+    }
+    public void setBtnUpdate(Button btn){
+        this.btnUpdate= btn;
+    }
+    public Button getBtnUpdate(){
+        btnUpdate.setText("Editar");
+        return btnUpdate;
     }// </editor-fold>  
 }

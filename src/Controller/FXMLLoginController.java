@@ -6,7 +6,6 @@ import java.net.URL;
 // <editor-fold defaultstate="collapsed" desc="Imports"> 
 import java.util.ResourceBundle;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +21,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 // </editor-fold>
 /*
  * FXML Controller class
@@ -31,7 +32,7 @@ import javafx.scene.Node;
 public class FXMLLoginController implements Initializable {
 
     private User usuario;
-    private final UserDAL userDAL = new UserDAL();
+    private final UserDAL userDAO = new UserDAL();
 
     @FXML private TextField txtLogin, txtPassword;
     @FXML private PasswordField txtPasswordField;
@@ -43,7 +44,7 @@ public class FXMLLoginController implements Initializable {
     }
     
     @FXML private void TentarLogin() {
-        User user = (User) userDAL.getWithWhere("user_login", txtLogin.getText());
+        User user = (User) userDAO.getWithWhere("user_login", txtLogin.getText());
         if (user != null) {
             usuario = user;
             String cryptPass;
@@ -76,9 +77,9 @@ public class FXMLLoginController implements Initializable {
                 } catch (IOException e) {
                 }
             } else
-                System.out.println("Senha invalida!");
+                showAlert(AlertType.ERROR, "Senha Invalida!");
         } else
-            System.out.println("Usuario não cadastrado!");
+            showAlert(AlertType.ERROR, "Usuario nao Cadastrado!");
 
     }
 
@@ -113,5 +114,14 @@ public class FXMLLoginController implements Initializable {
             node = node.getParent();
         }
         return false;
+    }
+    
+    private void showAlert(Alert.AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setGraphic(null);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.setContentText(message);
+        alert.show();
     }
 }
