@@ -197,6 +197,8 @@
 .dialog-pane {
     -fx-background-color: -fx-background;
     -fx-padding: 0;
+    -fx-border-color: -darkGray;
+    -fx-border-width:2.0px;
 }
 .dialog-pane > .content.label {
     -fx-padding: 0.5em 0.5em 0.5em 0.5em;

@@ -13,6 +13,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 // </editor-fold>
 
 /**
@@ -68,6 +69,7 @@ public class FXMLModelInsertController implements Initializable {
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.show();
     }
     

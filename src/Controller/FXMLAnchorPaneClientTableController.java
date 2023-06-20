@@ -29,6 +29,7 @@ import javafx.css.PseudoClass;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableRow;
+import javafx.stage.StageStyle;
 // </editor-fold>
 
 /**
@@ -189,6 +190,7 @@ public class FXMLAnchorPaneClientTableController implements Initializable {
         alert.setGraphic(null);
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
                 clientDAO.excluiClient(client);
@@ -203,6 +205,7 @@ public class FXMLAnchorPaneClientTableController implements Initializable {
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.show();
     }
 }

@@ -130,6 +130,7 @@ public class FXMLMenuController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
                     try {
@@ -156,6 +157,7 @@ public class FXMLMenuController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
                     System.exit(0);
@@ -171,6 +173,7 @@ public class FXMLMenuController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
                     MainApplication.isRegistering = false;
@@ -198,6 +201,7 @@ public class FXMLMenuController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
                     MainApplication.isRegistering = false;
@@ -214,10 +218,11 @@ public class FXMLMenuController implements Initializable {
     private boolean LoadDialog(String dialog, MySQL dao, String field, String fxmlResource, String error){
         
         TextInputDialog td = new TextInputDialog();
-        td.setHeaderText(dialog);
+        td.setContentText(dialog + "\n");
         td.setGraphic(null);
         td.setHeaderText(null);
         td.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        td.initStyle(StageStyle.UNDECORATED);
         td.showAndWait();
 
         Object aux = dao.getWithWhere(field, td.getResult());
@@ -245,6 +250,7 @@ public class FXMLMenuController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.setContentText(error);
             alert.show();
             return false;

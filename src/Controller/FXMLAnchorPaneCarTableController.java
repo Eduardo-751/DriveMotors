@@ -48,6 +48,7 @@ import javafx.css.PseudoClass;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableRow;
+import javafx.stage.StageStyle;
 // </editor-fold>
 
 /**
@@ -215,6 +216,7 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
         alert.setGraphic(null);
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
                 carDAO.DeleteCar(car);
@@ -324,6 +326,7 @@ public class FXMLAnchorPaneCarTableController implements Initializable {
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.show();
     }
 

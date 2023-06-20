@@ -75,6 +75,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES)
                     loadAnchorPane("../View/FXMLAnchorPaneCarTable.fxml");
@@ -276,7 +277,6 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
             Logger.getLogger(FXMLAnchorPaneCarInsertController.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }// </editor-fold>
-
     
     public void SetNew(Car car){
         this.car = car;
@@ -304,6 +304,7 @@ public class FXMLAnchorPaneCarInsertController implements Initializable {
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.show();
     }
 }

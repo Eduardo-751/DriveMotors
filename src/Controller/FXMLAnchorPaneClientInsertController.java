@@ -19,6 +19,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.StageStyle;
 // </editor-fold>
 
 /**
@@ -50,6 +51,7 @@ public class FXMLAnchorPaneClientInsertController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
                     LoadAnchorPane("../View/FXMLAnchorPaneClientTable.fxml");
@@ -154,6 +156,7 @@ public class FXMLAnchorPaneClientInsertController implements Initializable {
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.show();
     }
 }

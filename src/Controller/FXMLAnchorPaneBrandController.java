@@ -26,6 +26,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.StageStyle;
 // </editor-fold>
 /**
  * FXML Controller class
@@ -139,6 +140,7 @@ public class FXMLAnchorPaneBrandController implements Initializable {
                     cbBrand.setDisable(false);
                     txtModel.setDisable(false);
                     spAccessories.setDisable(false);
+                    btnUpdate.setDisable(false);
                     cbos.setStatus(cbBrand, "brand", "brand_name");
                     cbBrand.setValue(selectionModel.getBrand().getName());
                     txtModel.setText(selectionModel.getName());
@@ -192,6 +194,7 @@ public class FXMLAnchorPaneBrandController implements Initializable {
         alert.setGraphic(null);
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
                 carDAO.DeleteBrand(brand);
@@ -205,6 +208,7 @@ public class FXMLAnchorPaneBrandController implements Initializable {
         alert.setGraphic(null);
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
                 carDAO.DeleteModel(model);
@@ -216,6 +220,7 @@ public class FXMLAnchorPaneBrandController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.showAndWait().ifPresent(response -> {
                 carDAO.DeleteBrand(model.getBrand());
                 CreateBrandTable();
@@ -241,6 +246,7 @@ public class FXMLAnchorPaneBrandController implements Initializable {
         cbBrand.setDisable(true);
         txtModel.setDisable(true);
         spAccessories.setDisable(true);
+        btnUpdate.setDisable(true);
         cbBrand.setValue("");
         txtModel.setText("");
         setAccessories(1);
@@ -252,6 +258,7 @@ public class FXMLAnchorPaneBrandController implements Initializable {
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.show();
     }
 }

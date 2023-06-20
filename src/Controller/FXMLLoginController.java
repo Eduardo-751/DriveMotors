@@ -121,6 +121,7 @@ public class FXMLLoginController implements Initializable {
         alert.setGraphic(null);
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.setContentText(message);
         alert.show();
     }

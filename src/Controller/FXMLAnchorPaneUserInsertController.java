@@ -19,6 +19,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.TextField;
+import javafx.stage.StageStyle;
 // </editor-fold>
 
 /**
@@ -51,6 +52,7 @@ public class FXMLAnchorPaneUserInsertController implements Initializable {
             alert.setGraphic(null);
             alert.setHeaderText(null);
             alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
+            alert.initStyle(StageStyle.UNDECORATED);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES)
                     LoadAnchorPane("../View/FXMLAnchorPaneUserTable.fxml");
@@ -122,6 +124,7 @@ public class FXMLAnchorPaneUserInsertController implements Initializable {
         alert.setHeaderText(null);
         alert.getDialogPane().getStylesheets().add("/CSS/styles.css");
         alert.setContentText(message);
+        alert.initStyle(StageStyle.UNDECORATED);
         alert.show();
     }
 }
